@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <!-- This file has been downloaded from Bootsnipp.com. Enjoy! -->
+    <title>Logueate al chat !</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+
+    </style>
+        
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+    <script src="image-picker/image-picker/image-picker.min.js"></script>
+    <link href="image-picker/image-picker/image-picker.css" rel="stylesheet">
+
+    <style type="text/css">
+    
+    .img-picker{     
+     overflow-y: scroll;
+     height:280px;
+
+    }       
+
+    .combo select{     
+     display: block;
+
+    }       
+    </style>
+
+
+</head>
+<body>
+    <div class="container">    
+        <div id="loginbox" style="margin-top:5px;" class="mainbox col-md-6 col-md-offset-0 col-sm-6 col-sm-offset-2">                    
+            <div class="panel panel-info" >
+                    <div class="panel-heading">
+                        <div class="panel-title">Entrar</div>
+                        <div style="float:right; font-size: 80%; position: relative; top:-10px"><a href="#"></a></div>
+                    </div>     
+
+                    <div style="padding-top:30px" class="panel-body" >
+
+                        <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
+                            
+                        <form id="loginform" class="form-horizontal" role="form" action="chat.html">
+                                    
+                            <div style="margin-bottom: 5px" class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                        <input id="login-username" type="text" class="form-control" name="username" value="" placeholder="username">
+                                        
+                                        <input id="chat-room" type="text" class="form-control" name="chatroom" value="" placeholder="sala de chat" style="display:none">
+
+                                        <input id="chat-novisible" type="hidden" class="form-control" name="chatnovisible" value="" placeholder="username">
+                                       
+                                          <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                                            Salas Activas
+                                            <span class="caret"></span>
+                                          </button>
+                                          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1" id="combobox">
+                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="showchat();">Nueva</a></li>
+                                            
+                                          </ul>
+                                       
+                                  
+                             </div>                             
+                                
+                            <div style="margin-bottom: 25px" class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-file"></i></span>     
+                            <div class="img-picker">                         
+                            <select class="image-picker show-html" name="image-picker"> 
+                                <option data-img-src="img/103guardthumb-thumb.JPG" value="103guardthumb-thumb.JPG"> </option> 
+                            <option data-img-src="img/10aa15-thumb.jpg" value="10aa15-thumb.jpg"> </option> 
+                            <option data-img-src="img/1185adl-thumb.jpg" value="1185adl-thumb.jpg"> </option> 
+                            <option data-img-src="img/1190h_h_r-thumb.jpg" value="1190h_h_r-thumb.jpg"> </option>                             
+                            <option data-img-src="img/123boy_looking-thumb.jpg" value="123boy_looking-thumb.jpg"> </option> 
+                            <option data-img-src="img/13skull-thumb.jpg" value="13skull-thumb.jpg"> </option> 
+                            <option data-img-src="img/1500Leader_Of_The_Pack-thumb.jpg" value="1500Leader_Of_The_Pack-thumb.jpg"> </option> 
+                            <option data-img-src="img/15fairy1-thumb.jpg" value="15fairy1-thumb.jpg"> </option> 
+                            <option data-img-src="img/15fishingratmoon-thumb.jpg" value="15fishingratmoon-thumb.jpg"> </option> 
+                            <option data-img-src="img/15goldfish-thumb.jpg" value="15goldfish-thumb.jpg"> </option> 
+                            <option data-img-src="img/15littlerabbit-thumb.jpg" value="15littlerabbit-thumb.jpg"> </option> 
+                            <option data-img-src="img/15rainbow1-thumb.jpg" value="15rainbow1-thumb.jpg"> </option> 
+                            <option data-img-src="img/15rat2-thumb.jpg" value="15rat2-thumb.jpg"> </option> 
+                            <option data-img-src="img/15tpale4-thumb.jpg" value="15tpale4-thumb.jpg"> </option> 
+                            <option data-img-src="img/15tuglybird2-thumb.jpg" value="15tuglybird2-thumb.jpg"> </option> 
+                            <option data-img-src="img/15wait-thumb.jpg" value="15wait-thumb.jpg"> </option> 
+                            <option data-img-src="img/1701-thumb.jpg" value="1701-thumb.jpg"> </option> 
+                            <option data-img-src="img/19silverhottie-thumb.jpg" value="19silverhottie-thumb.jpg"> </option> 
+                            <option data-img-src="img/25715-thumb.jpg" value="25715-thumb.jpg"> </option> 
+                            <option data-img-src="img/27ladyknightava-thumb.jpg" value="27ladyknightava-thumb.jpg"> </option> 
+                            <option data-img-src="img/283SoS10a-thumb.jpg" value="283SoS10a-thumb.jpg"> </option> 
+                            <option data-img-src="img/29ikon7-thumb.jpg" value="29ikon7-thumb.jpg"> </option> 
+                            <option data-img-src="img/29ikon.jpg" value="29ikon.jpg"> </option> 
+                            <option data-img-src="img/321cyber-fist-thumb.jpg" value="321cyber-fist-thumb.jpg"> </option> 
+                            <option data-img-src="img/32stonewolf_av-thumb.jpg" value="32stonewolf_av-thumb.jpg"> </option> 
+                            <option data-img-src="img/345newquaysunsetAA-thumb.jpg" value="345newquaysunsetAA-thumb.jpg"> </option>                                                         
+                            <option data-img-src="img/400Eyeofthetiger-thumb.jpg" value="400Eyeofthetiger-thumb.jpg"> </option> 
+                            
+                            <option data-img-src="img/4133-thumb.jpg" value="4133-thumb.jpg"> </option> 
+                            <option data-img-src="img/42whatthehell1-thumb.jpg" value="42whatthehell1-thumb.jpg"> </option> 
+                            <option data-img-src="img/431Alien1_ktk-thumb.jpg" value="431Alien1_ktk-thumb.jpg"> </option> 
+                            <option data-img-src="img/431AlienPortrait_ktk-thumb.jpg" value="431AlienPortrait_ktk-thumb.jpg"> </option> 
+                            <option data-img-src="img/431alien_saucer_ktk-thumb.jpg" value="431alien_saucer_ktk-thumb.jpg"> </option> 
+                            <option data-img-src="img/4alice_duke1-thumb.jpg" value="4alice_duke1-thumb.jpg"> </option> 
+                            <option data-img-src="img/4raven-thumb.jpg" value="4raven-thumb.jpg"> </option> 
+                            <option data-img-src="img/53viador-thumb.jpg" value="53viador-thumb.jpg"> </option> 
+                            <option data-img-src="img/598p1.jpg" value="598p1.jpg"> </option> 
+                            <option data-img-src="img/6471Itachi14-thumb.jpg" value="6471Itachi14-thumb.jpg"> </option> 
+                            <option data-img-src="img/6barbarianbabe_CG-thumb.JPG" value="6barbarianbabe_CG-thumb.JPG"> </option> 
+                            <option data-img-src="img/6enlightened_CG-thumb.jpg" value="6enlightened_CG-thumb.jpg"> </option> 
+                            <option data-img-src="img/71i_xolotl-thumb.jpg" value="71i_xolotl-thumb.jpg"> </option> 
+                            
+                            <option data-img-src="img/77orc-thumb.jpg" value="77orc-thumb.jpg"> </option> 
+                            <option data-img-src="img/82asaxon-lilytree-thumb.jpg" value="82asaxon-lilytree-thumb.jpg"> </option> 
+                            <option data-img-src="img/82asaxon-sunrise2004-thumb.jpg" value="82asaxon-sunrise2004-thumb.jpg"> </option> 
+                            <option data-img-src="img/82asaxon-waves2004-thumb.jpg" value="82asaxon-waves2004-thumb.jpg"> </option> 
+                            <option data-img-src="img/9Mark_Lockett5-thumb.jpg" value="9Mark_Lockett5-thumb.jpg"> </option> 
+                              
+                            </select>
+                             </div>                                                                    
+                             </div>
+
+                                <div style="margin-top:10px" class="form-group">
+                                    <!-- Button -->
+
+                                    <div class="col-sm-12 controls">
+                                      <a id="btn-login"  onclick="enviar();" class="btn btn-success">Login  </a>                                    
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-md-12 control">
+                                        <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
+                                            <a href="http://www.allavatars.com" title="avatars">Avatars</a>
+                                        </div>
+                                    </div>
+                                </div>    
+                            </form>     
+
+
+
+                        </div>                     
+                    </div>  
+        </div>
+        <div id="signupbox" style="display:none; margin-top:50px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <div class="panel-title">Sign Up</div>
+                            <div style="float:right; font-size: 85%; position: relative; top:-10px"><a id="signinlink" href="#" onclick="$('#signupbox').hide(); $('#loginbox').show()">Sign In</a></div>
+                        </div>  
+                        <div class="panel-body" >
+                            <form id="signupform" class="form-horizontal" role="form" >
+                                
+                                <div id="signupalert" style="display:none" class="alert alert-danger">
+                                    <p>Error:</p>
+                                    <span></span>
+                                </div>
+                                    
+                                
+                                  
+                                <div class="form-group">
+                                    <label for="email" class="col-md-3 control-label">Email</label>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control" name="email" placeholder="Email Address">
+                                    </div>
+                                </div>
+                                    
+                                <div class="form-group">
+                                    <label for="firstname" class="col-md-3 control-label">First Name</label>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control" name="firstname" placeholder="First Name">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastname" class="col-md-3 control-label">Last Name</label>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control" name="lastname" placeholder="Last Name">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password" class="col-md-3 control-label">Password</label>
+                                    <div class="col-md-9">
+                                        <input type="password" class="form-control" name="passwd" placeholder="Password">
+                                    </div>
+                                </div>
+                                    
+                                <div class="form-group">
+                                    <label for="icode" class="col-md-3 control-label">Invitation Code</label>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control" name="icode" placeholder="">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <!-- Button -->                                        
+                                    <div class="col-md-offset-3 col-md-9">
+                                        <button id="btn-signup" type="button" class="btn btn-info"><i class="icon-hand-right"></i> &nbsp Sign Up</button>
+                                        <span style="margin-left:8px;">or</span>  
+                                    </div>
+                                </div>
+                                
+                                <div style="border-top: 1px solid #999; padding-top:20px"  class="form-group">
+                                    
+                                    <div class="col-md-offset-3 col-md-9">
+                                        <button id="btn-fbsignup" type="button" class="btn btn-primary"><i class="icon-facebook"></i>   Sign Up with Facebook</button>
+                                    </div>                                           
+                                        
+                                </div>
+                                
+                                
+                                
+                            </form>
+                         </div>
+                    </div>
+
+               
+               
+                
+         </div> 
+    </div>
+    
+<script type="text/javascript">
+
+$("select").imagepicker();
+open_rooms();
+
+
+function enviar(){
+    $("#loginform").submit();
+}
+
+function open_rooms(){
+    //msg=encodeURIComponent(msg)
+    uri="http://10.1.125.41:7379/PUBSUB/channels"
+    //mensaje=user+"|"+res+"|"+avatar
+    //data=$.getJSON(uri, null);    
+    //console.log(data)
+    //console.log(JSON.stringify(responseJSON))
+    //obj = JSON.parse(data.responseJSON);    
+    //console.log(obj)    
+
+    $.getJSON( uri, function( data ) {
+    //console.log(assessments);
+        rooms = data.PUBSUB;
+        lenroom = data.PUBSUB.length;
+        //ciclo for assessments.PUBSUB.length y lo agrego al combo
+            for (var i=0; i<lenroom;i++){
+                $("#combobox").append("<li role=\"presentation\"><a role=\"menuitem\" onclick=\"room('"+rooms[i]+"')\">"+rooms[i]+"</a></li>");
+            }
+
+        });
+    
+    
+}
+// <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
+function room(val){    
+ $("#chat-room").val(val);
+}
+function showchat(){
+ $("#chat-room").css({"display":"block"}); 
+}
+
+</script>
+</body>
+</html>

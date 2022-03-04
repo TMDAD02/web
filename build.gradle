@@ -1,0 +1,55 @@
+plugins {
+	id 'org.springframework.boot' version '2.4.3'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id 'org.sonarqube' version '3.0'
+	id 'jacoco'
+}
+
+group = 'com.einanet'
+version = ''
+sourceCompatibility = '8'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-amqp'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'org.springframework.security:spring-security-test'
+	implementation 'org.springframework.security:spring-security-web'
+	implementation 'org.springframework.security:spring-security-config'
+	implementation 'org.springframework.security:spring-security-taglibs'
+	compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+    compile group: 'junit', name: 'junit', version: '4.+'
+	compile 'com.rabbitmq:amqp-client:5.11.0'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation group: 'org.json', name: 'json', version: '20090211'
+	testCompile group: 'org.testng', name: 'testng', version: '7.3.0'
+	implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.5.6'
+}
+
+test {
+	testLogging {
+		events "failed"
+		exceptionFormat "full"
+	}
+}
+
+sonarqube {
+	properties {
+		property 'sonar.host.url', 'http://localhost:9000'
+		property 'sonar.login', 'admin'
+		property 'sonar.password', 'admin'
+	}
+}
+
+jacocoTestReport {
+	reports {
+		xml.enabled true
+	}
+}
+test.finalizedBy jacocoTestReport
+tasks['sonarqube'].dependsOn test
