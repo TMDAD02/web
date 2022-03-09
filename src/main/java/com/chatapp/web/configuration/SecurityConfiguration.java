@@ -54,7 +54,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
                 .antMatchers("/chat.html").hasAnyRole("USUARIO").and()
-                .formLogin().loginPage("/acceso.html").successHandler(myAuthenticationSuccessHandler()).permitAll().and()
+                .formLogin().loginPage("/acceso.html").defaultSuccessUrl("/chat.html").permitAll().and()
                 .authorizeRequests().anyRequest().permitAll().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
