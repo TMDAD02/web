@@ -31,7 +31,7 @@ public class ControladorWebSocket {
 
     @MessageMapping("/chat/{to}")
     public void tratarChatPuntoPunto(@DestinationVariable String to, Mensaje mensaje) throws Exception {
-        System.out.println("Para: " + to + ". Recibido mensaje: " + mensaje.getContenido());
+        System.out.println("Mensaje: " + mensaje);
         boolean destinatarioConectado = esUsuarioConectado(to);
         if(destinatarioConectado) {
             simpMessagingTemplate.convertAndSend("/topic/messages/" + to, mensaje);

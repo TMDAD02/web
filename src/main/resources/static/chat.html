@@ -218,11 +218,6 @@ img {
 
 $('<audio id="chatAudio"><source src="snd/notify.ogg" type="audio/ogg"><source src="snd/notify.mp3" type="audio/mpeg"><source src="snd/notify.wav" type="audio/wav"></audio>').appendTo('body');
 
-//data del form a variables
-var username = getUrlParameter('username');
-var from = getUrlParameter('username');
-var currentTo = getUrlParameter('to');
-var stompClient = null;
 
 var SENDING_TEMPLATE = "<div class='row msg_container base_receive'> \
                         <div class='col-md-2 col-xs-2 avatar'> \
@@ -248,12 +243,11 @@ var RECEIVING_TEMPLATE = "<div class=\"row msg_container base_sent\"> \
                         </div> \
                     </div>"
 
-
+var myUsername = readUsernameFromCookie();
+var currentTo = getUrlParameter('to');
+var stompClient = null;
 
 setInterval(function () {bajalo()}, 5000);
-
-
-
 
 $("#username").text(currentTo);
     $(document).on('click', '.panel-heading span.icon_minim', function (e) {
@@ -289,10 +283,10 @@ $("#username").text(currentTo);
     });
 
 stompClient = Stomp.client('ws://localhost:8888/ws');
-    stompClient.connect({"username": username}, function (frame) {
+    stompClient.connect({"username": myUsername}, function (frame) {
         showConnected()
         reconnectAttempts = 0;
-        stompClient.subscribe('/topic/messages/'+username, function (message) {
+        stompClient.subscribe('/topic/messages/'+myUsername, function (message) {
             handleNewMessage(message)
         });
     }, function (frame) {
@@ -328,16 +322,16 @@ function handleNewMessage(message) {
 }
 
 function getUsers() {
-    usuarioTemplate = "<a href='chat.html?hola=hola&username=<%= username %>&to=<%= usr %>'> <%= usr %> </a><br>"
+    usuarioTemplate = "<a href='chat.html?&to=<%= usr %>'> <%= usr %> </a><br>"
     var compiledUsuarioTemplate = _.template(usuarioTemplate);
     var todos = ""
     url = "http://localhost:8888/usuarios"
     $.getJSON( url, function(data) {
         console.log(data);
         var listaUsuarios = data.listaUsuarios;
-        listaUsuarios.forEach(function(usuario) {
-            console.log(usuario);
-            var msg = compiledUsuarioTemplate({'username': username, usr:usuario});
+        listaUsuarios.forEach(function(connectedUser) {
+            console.log(connectedUser);
+            var msg = compiledUsuarioTemplate({'username': myUsername, usr:connectedUser});
             todos += msg
         });
         $("#user_base").html(todos);
@@ -350,7 +344,7 @@ function getMessages() {
         console.log(mensajes);
         var listaMensajes = mensajes.listaMensajes;
         listaMensajes.forEach(function(mensaje) {
-            if(mensaje.fuente == username) {
+            if(mensaje.fuente == myUsername) {
                 var compiledSending = _.template(SENDING_TEMPLATE)
                 mensaje = compiledSending({msg:mensaje.contenido,usr:mensaje.fuente,datetim:mensaje.fecha,avat:"https://muratselek.com.tr/wp-content/uploads/2019/01/yorum-icon-avatar-men-768x768.png"});
                 $("#chat_base").append(mensaje);
@@ -388,10 +382,14 @@ function getCurrentTime() {
     return dateStr
 }
 
+function readUsernameFromCookie() {
+    return document.cookie.match('(^|;)\\s*' + 'usuario' + '\\s*=\\s*([^;]+)')?.pop() || ''
+}
+
 function showConnected() {
-    var TEXT_TEMPLATE = '<h4><p style="color:#008000";>Conectado: <%= username %></p></h4>'
+    var TEXT_TEMPLATE = '<h4><p style="color:#008000";>Conectado: <%= myUsername %></p></h4>'
     var compiledText = _.template(TEXT_TEMPLATE)
-    texto = compiledText({'username': username});
+    texto = compiledText({'username': myUsername});
     $("#connection-text").append(texto);
 }
 
@@ -411,8 +409,7 @@ function getUrlParameter(sParam) {
     var sURLVariables = sPageURL.split('&');
     for (var i = 0; i < sURLVariables.length; i++) {
         var sParameterName = sURLVariables[i].split('=');
-        if (sParameterName[0] == sParam) 
-        {
+        if (sParameterName[0] == sParam) {
             return sParameterName[1];
         }
     }
@@ -426,7 +423,6 @@ $( "#btn-input" ).keypress(function( event ) {
     }    
 });
 
-
 function send_chat(){
     msg=$("#btn-input").val();
     send_message(msg);
@@ -438,9 +434,9 @@ function send_chat(){
 function send_message(msg) {
     var compiledSending = _.template(SENDING_TEMPLATE)
 
-    var jsonString =  JSON.stringify({'contenido': msg, 'fuente': from, 'destino':currentTo});
+    var jsonString =  JSON.stringify({'contenido': msg, 'fuente': myUsername, 'destino':currentTo});
     stompClient.send("/app/chat/" + currentTo, {'username': currentTo}, jsonString);
-    mensaje = compiledSending({msg:msg,usr:from,datetim:getCurrentTime(),avat:"https://muratselek.com.tr/wp-content/uploads/2019/01/yorum-icon-avatar-men-768x768.png"});
+    mensaje = compiledSending({msg:msg,usr:myUsername,datetim:getCurrentTime(),avat:"https://muratselek.com.tr/wp-content/uploads/2019/01/yorum-icon-avatar-men-768x768.png"});
 
     $("#chat_base").append(mensaje);
 }

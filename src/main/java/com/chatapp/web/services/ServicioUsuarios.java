@@ -46,7 +46,7 @@ public class ServicioUsuarios implements UserDetailsService {
                         .credentialsExpired(false)
                         .disabled(false)
                         .accountLocked(false)
-                        .roles("USER")
+                        .roles("USUARIO")
                         .build();
             }
         } catch (Throwable e) {
@@ -74,75 +74,5 @@ public class ServicioUsuarios implements UserDetailsService {
         solicitud.put(PARAMETROS, parametros);
         return rabbit.enviaryRecibirMensaje(solicitud);
     }
-
-
-    public JSONObject registrar(String nombre, String contrasena, String email, String rol) throws Throwable {
-        JSONObject usuario = new JSONObject();
-        usuario.put("nombre", nombre);
-        usuario.put("contrasenaCifrada", cifrarContrasena(contrasena));
-        usuario.put("email", email);
-        usuario.put("rol", rol);
-
-        JSONObject mensaje = new JSONObject();
-        mensaje.put(NOMBRE_COMANDO, "REGISTRO");
-        mensaje.put(PARAMETROS, usuario);
-        return rabbit.enviaryRecibirMensaje(mensaje);
-    }
-
-    public JSONObject iniciarSesion(String email, String contrasena) throws Throwable {
-        JSONObject usuario = new JSONObject();
-        usuario.put("email", email);
-        usuario.put("contrasenaCifrada", cifrarContrasena(contrasena));
-
-        JSONObject mensaje = new JSONObject();
-        mensaje.put(NOMBRE_COMANDO, "LOGIN");
-        mensaje.put(PARAMETROS, usuario);
-
-        return rabbit.enviaryRecibirMensaje(mensaje);
-    }
-
-    public boolean existeUsuario(String id, boolean gerente) throws Exception {
-        JSONObject usuario = new JSONObject();
-        usuario.put("id", id);
-        JSONObject mensaje = new JSONObject();
-        mensaje.put(NOMBRE_COMANDO, "EXISTE_USUARIO");
-        mensaje.put(PARAMETROS, usuario);
-        JSONObject respuesta = rabbit.enviaryRecibirMensaje(mensaje);
-        if(respuesta.getBoolean("existe") && !gerente){
-            return true;
-        }else if(respuesta.getBoolean("existe") && gerente && respuesta.getString("rol").equals("GERENTE")){
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Cifra la contrasena del usuario usando el cifrado bsáico en base64
-     * @param contrasena contraseña a cifrar
-     * @return una cadena de texto con la contraseña cifrada
-     */
-    private String cifrarContrasena(String contrasena) {
-        return new String(Base64.getEncoder().encode(contrasena.getBytes()));
-    }
-
-    public JSONObject informarEntradaSalida(String idEspacio, String idUsuario, String accion) throws Exception {
-        JSONObject informe = new JSONObject();
-        informe.put("idEspacio", idEspacio);
-        informe.put("idUsuario", idUsuario);
-        if (accion.equals("entrada")){
-            JSONObject mensaje = new JSONObject();
-            mensaje.put(NOMBRE_COMANDO, "INFORMAR_ENTRADA");
-            mensaje.put(PARAMETROS, informe);
-            return rabbit.enviaryRecibirMensaje(mensaje);
-        } else if(accion.equals("salida")) {
-            JSONObject mensaje = new JSONObject();
-            mensaje.put(NOMBRE_COMANDO, "INFORMAR_SALIDA");
-            mensaje.put(PARAMETROS, informe);
-            return rabbit.enviaryRecibirMensaje(mensaje);
-        }
-        throw new Exception();
-    }
-
-
 
 }

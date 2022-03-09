@@ -41,6 +41,7 @@ public class ControladorUsuarios {
     @Autowired
     private JWTTokenUtil jwtTokenUtil;
 
+    /*
     @PostMapping(path = "/usuario", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> registro(@RequestParam String nombre, @RequestParam String contrasena, @RequestParam String email) {
         try {
@@ -55,20 +56,16 @@ public class ControladorUsuarios {
         }
     }
 
+*/
+    @PostMapping(path = "/autenticar")
+    public void autenticar(@RequestParam String nombre, HttpServletResponse response) {
+        Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(nombre, MASTER_PASSWORD));
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        UserDetails userDetails = (UserDetails) auth.getPrincipal();
+        String token = jwtTokenUtil.generateToken(userDetails);
+        response.addCookie(new Cookie("token", token));
+        response.addCookie(new Cookie("usuario", userDetails.getUsername()));
 
-    @GetMapping(path = "/autenticar", produces = "application/json")
-    public ResponseEntity<?> iniciarSesion(@RequestParam String nombre, HttpServletResponse response) {
-        try {
-            Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(nombre, MASTER_PASSWORD));
-            SecurityContextHolder.getContext().setAuthentication(auth);
-            UserDetails userDetails = (UserDetails) auth.getPrincipal();
-            String token = jwtTokenUtil.generateToken(userDetails);
-            response.addCookie(new Cookie("token", token));
-            return ResponseEntity.ok(new JWT(token));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
     }
 
     @GetMapping(path = "/usuarios")
@@ -91,10 +88,12 @@ public class ControladorUsuarios {
 
 
 
-    @GetMapping(path = "/normal")
+    @GetMapping(path = "/ejemplo")
     public ResponseEntity<?> hola() {
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
 
 /*
     @GetMapping(path = "/notificaciones", consumes = "application/json", produces = "application/json")

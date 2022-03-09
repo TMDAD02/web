@@ -56,6 +56,4 @@ public class ServicioChat {
         solicitud.put(PARAMETROS, parametros);
         return rabbit.enviaryRecibirMensaje(solicitud);
     }
-
-
 }
