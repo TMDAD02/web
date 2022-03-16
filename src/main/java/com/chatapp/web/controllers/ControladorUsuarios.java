@@ -1,9 +1,7 @@
 package com.chatapp.web.controllers;
 
-import com.chatapp.web.configuration.JWT;
 import com.chatapp.web.configuration.JWTTokenUtil;
 import com.chatapp.web.services.ServicioUsuarios;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +10,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Map;
 
 import static com.chatapp.web.services.ServicioUsuarios.MASTER_PASSWORD;
 
@@ -69,9 +64,9 @@ public class ControladorUsuarios {
     }
 
     @GetMapping(path = "/usuarios")
-    public ResponseEntity<?> obtenerUsuarios() {
+    public ResponseEntity<?> obtenerUsuarios(@AuthenticationPrincipal final UserDetails ud) {
         try {
-            UserDetails ud = (UserDetails) (SecurityContextHolder.getContext().getAuthentication()).getPrincipal();
+            //UserDetails ud = (UserDetails) (SecurityContextHolder.getContext().getAuthentication()).getPrincipal();
             JSONObject respuesta = servicioUsuarios.obtenerTodosUsuarios(ud.getUsername());
             System.out.println(respuesta);
             if(respuesta.getString(RESULTADO_RESPUESTA_NOMBRE).equals("OBTENER_TODOS_USUARIOS_CORRECTO")) {
