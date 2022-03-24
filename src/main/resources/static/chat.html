@@ -286,7 +286,7 @@ stompClient = Stomp.client('ws://localhost:8888/ws');
     stompClient.connect({"username": myUsername}, function (frame) {
         showConnected()
         reconnectAttempts = 0;
-        stompClient.subscribe('/topic/messages/'+myUsername, function (message) {
+        stompClient.subscribe('/topic/'+myUsername, function (message) {
             handleNewMessage(message)
         });
     }, function (frame) {

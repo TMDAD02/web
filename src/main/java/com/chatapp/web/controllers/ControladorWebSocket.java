@@ -34,7 +34,7 @@ public class ControladorWebSocket {
         System.out.println("Mensaje: " + mensaje);
         boolean destinatarioConectado = esUsuarioConectado(to);
         if(destinatarioConectado) {
-            simpMessagingTemplate.convertAndSend("/topic/messages/" + to, mensaje);
+            simpMessagingTemplate.convertAndSend("/topic/" + to, mensaje);
         }
         servicioChat.guardarMensaje(mensaje, destinatarioConectado);
 

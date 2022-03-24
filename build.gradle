@@ -1,12 +1,10 @@
 plugins {
-	id 'org.springframework.boot' version '2.4.3'
+	id 'org.springframework.boot' version '2.6.4'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
-	id 'org.sonarqube' version '3.0'
-	id 'jacoco'
 }
 
-group = 'com.einanet'
+group = 'com.chatapp'
 version = ''
 sourceCompatibility = '8'
 
@@ -22,13 +20,16 @@ dependencies {
 	implementation 'org.springframework.security:spring-security-web'
 	implementation 'org.springframework.security:spring-security-config'
 	implementation 'org.springframework.security:spring-security-taglibs'
-	compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
-    compile group: 'junit', name: 'junit', version: '4.+'
-	compile 'com.rabbitmq:amqp-client:5.11.0'
+	implementation 'org.webjars:sockjs-client:1.0.2'
+	implementation 'org.webjars:stomp-websocket:2.3.3'
+	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+	implementation group: 'com.rabbitmq', name: 'amqp-client', version: '5.14.2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation group: 'org.json', name: 'json', version: '20090211'
-	testCompile group: 'org.testng', name: 'testng', version: '7.3.0'
 	implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.5.6'
+	implementation group: 'io.projectreactor', name: 'reactor-core', version: '3.4.16'
+	implementation group: 'io.netty', name: 'netty-all', version: '4.1.75.Final'
+	implementation group: 'io.projectreactor.netty', name: 'reactor-netty', version: '1.0.17'
 }
 
 test {
@@ -37,19 +38,3 @@ test {
 		exceptionFormat "full"
 	}
 }
-
-sonarqube {
-	properties {
-		property 'sonar.host.url', 'http://localhost:9000'
-		property 'sonar.login', 'admin'
-		property 'sonar.password', 'admin'
-	}
-}
-
-jacocoTestReport {
-	reports {
-		xml.enabled true
-	}
-}
-test.finalizedBy jacocoTestReport
-tasks['sonarqube'].dependsOn test

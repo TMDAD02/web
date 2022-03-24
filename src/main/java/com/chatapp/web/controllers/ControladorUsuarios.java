@@ -5,6 +5,7 @@ import com.chatapp.web.services.ServicioUsuarios;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -53,14 +54,14 @@ public class ControladorUsuarios {
 
 */
     @PostMapping(path = "/autenticar")
-    public void autenticar(@RequestParam String nombre, HttpServletResponse response) {
+    public ResponseEntity<String> autenticar(@RequestParam String nombre, HttpServletResponse response) {
         Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(nombre, MASTER_PASSWORD));
         SecurityContextHolder.getContext().setAuthentication(auth);
         UserDetails userDetails = (UserDetails) auth.getPrincipal();
         String token = jwtTokenUtil.generateToken(userDetails);
         response.addCookie(new Cookie("token", token));
         response.addCookie(new Cookie("usuario", userDetails.getUsername()));
-
+        return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token).body("<meta http-equiv=\"refresh\" content=\"0; url=/chat.html\" />\n");
     }
 
     @GetMapping(path = "/usuarios")

@@ -2,7 +2,9 @@ package com.chatapp.web.configuration;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.messaging.converter.MessageConverter;
 import org.springframework.messaging.handler.invocation.HandlerMethodArgumentResolver;
 import org.springframework.messaging.handler.invocation.HandlerMethodReturnValueHandler;
@@ -13,11 +15,14 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
 
+
+
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketMessageBrokerConfig implements WebSocketMessageBrokerConfigurer {
 
-
+    @Autowired
+    private Environment env;
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
@@ -27,7 +32,18 @@ public class WebSocketMessageBrokerConfig implements WebSocketMessageBrokerConfi
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         config.setApplicationDestinationPrefixes("/app"); // Mensajes que envía el usuario
-        config.enableSimpleBroker("/topic"); // Mensajes que recibe el usuario
+        //config.enableSimpleBroker("/topic");
+
+        config.enableStompBrokerRelay("/topic")
+                .setRelayHost("rat-01.rmq2.cloudamqp.com")
+                .setRelayPort(61613)
+                .setClientLogin("mudxwkic")
+                .setClientPasscode("RanoXwGQ-JCPHuh8JRSVWuerlj6KtOv3")
+                .setSystemLogin("mudxwkic")
+                .setSystemPasscode("RanoXwGQ-JCPHuh8JRSVWuerlj6KtOv3")
+                .setVirtualHost("mudxwkic");
+
+
     }
 
     @Override
