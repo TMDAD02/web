@@ -2,6 +2,7 @@ package com.chatapp.web.controllers;
 
 import com.chatapp.web.models.Mensaje;
 import com.chatapp.web.services.ServicioChat;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -51,6 +52,14 @@ public class ControladorWebSocket {
             simpMessagingTemplate.convertAndSend("/topic/messages/" + to, message);
         }
 
+    }
+
+    public void enviarMensajeFichero(Mensaje mensaje) throws JSONException {
+        boolean destinatarioConectado = esUsuarioConectado(mensaje.getDestino());
+        if(esUsuarioConectado(mensaje.getDestino())) {
+            simpMessagingTemplate.convertAndSend("/topic/" + mensaje.getDestino(), mensaje);
+        }
+        servicioChat.guardarMensaje(mensaje, destinatarioConectado);
     }
 
 

@@ -178,10 +178,11 @@ img {
                         <button class="btn btn-primary btn-sm" id="btn-file" onclick="send_file()">Send</button>
                         </span> action="/chat"
                         -->
-                        <form method="POST" enctype="multipart/form-data" > <!-- action="/chat" -->
+                        <form method="POST" enctype="multipart/form-data"  action="/file" >
                             <table>
                                 <tr><td><input id="input-file" type="file" name="file" /></td>
-                                    <td><input type="submit" value="Upload" onclick="send_file()"/></td>
+                                    <input type="hidden" name="currentTo" value="xd" />
+                                    <td><input type="submit" value="Subir"/></td>
                                 </tr>
                             </table>
                         </form>

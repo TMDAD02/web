@@ -27,27 +27,28 @@ public class FileSystemStorageService implements StorageService {
 	}
 
 	@Override
-	public void store(MultipartFile file) {
+	public String store(MultipartFile file, String sender) {
 		try {
 			if (file.isEmpty()) {
 				throw new StorageException("Failed to store empty file.");
 			}
-			Path destinationFile = this.rootLocation.resolve(
-					Paths.get(file.getOriginalFilename()))
+			String generatedFilename = generateFilename(sender, file.getOriginalFilename());
+			Path destinationFile = this.rootLocation.resolve(generatedFilename)
 					.normalize().toAbsolutePath();
+
 			if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
-				// This is a security check
-				throw new StorageException(
-						"Cannot store file outside current directory.");
+				throw new StorageException("Cannot store file outside current directory.");
 			}
 			try (InputStream inputStream = file.getInputStream()) {
 				Files.copy(inputStream, destinationFile,
 					StandardCopyOption.REPLACE_EXISTING);
+				return generatedFilename;
 			}
 		}
 		catch (IOException e) {
 			throw new StorageException("Failed to store file.", e);
 		}
+
 	}
 
 	@Override
@@ -100,5 +101,17 @@ public class FileSystemStorageService implements StorageService {
 		catch (IOException e) {
 			throw new StorageException("Could not initialize storage", e);
 		}
+	}
+
+	private String generateFilename(String sender, String filename) {
+		return sender + "-" + System.currentTimeMillis() + getFileExtension(filename);
+	}
+
+	private String getFileExtension(String filename) {
+		int lastIndexOf = filename.lastIndexOf(".");
+		if (lastIndexOf == -1) {
+			return "";
+		}
+		return filename.substring(lastIndexOf);
 	}
 }

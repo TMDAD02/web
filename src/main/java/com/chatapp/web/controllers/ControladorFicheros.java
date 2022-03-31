@@ -3,11 +3,15 @@ package com.chatapp.web.controllers;
 import java.io.IOException;
         import java.util.stream.Collectors;
 
-        import org.springframework.beans.factory.annotation.Autowired;
+import com.chatapp.web.models.Mensaje;
+import org.json.JSONException;
+import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.core.io.Resource;
         import org.springframework.http.HttpHeaders;
         import org.springframework.http.ResponseEntity;
-        import org.springframework.stereotype.Controller;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Controller;
         import org.springframework.ui.Model;
         import org.springframework.web.bind.annotation.ExceptionHandler;
         import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +28,9 @@ import java.io.IOException;
 
 @Controller
 public class ControladorFicheros {
+
+    @Autowired
+    private ControladorWebSocket controladorWebSocket;
 
     private final StorageService storageService;
 
@@ -46,7 +53,6 @@ public class ControladorFicheros {
     @GetMapping("/files/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
-
         Resource file = storageService.loadAsResource(filename);
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
@@ -54,13 +60,11 @@ public class ControladorFicheros {
 
     @PostMapping("/file")
     public String handleFileUpload(@RequestParam("file") MultipartFile file,
-                                   RedirectAttributes redirectAttributes) {
-
-        storageService.store(file);
-        //redirectAttributes.addFlashAttribute("message",
-        //        "You successfully uploaded " + file.getOriginalFilename() + "!");
-
-        return "redirect:/";
+                                   @RequestParam("currentTo") String destino, @AuthenticationPrincipal final UserDetails ud) throws JSONException {
+        System.out.println("Fichero subido por : " + ud.getUsername() + "para" + destino);
+        storageService.store(file, ud.getUsername());
+        controladorWebSocket.enviarMensajeFichero(new Mensaje(ud.getUsername(), "<a href=prueba.txt>fichero xd</a>", "to"));
+        return "redirect:/chat.html";
     }
 
     @ExceptionHandler(StorageFileNotFoundException.class)
