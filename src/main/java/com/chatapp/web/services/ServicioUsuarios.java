@@ -23,9 +23,6 @@ public class ServicioUsuarios implements UserDetailsService {
     @Autowired
     Rabbit rabbit;
 
-    @Autowired
-    private PasswordEncoder bCryptPasswordEncoder;
-
     /**
      * Spring Security authentication
      *
@@ -37,7 +34,6 @@ public class ServicioUsuarios implements UserDetailsService {
         //System.out.println("Hello, Spring Security! let me check: " + nombre);
         try {
             JSONObject respuesta = autenticarUsuario(nombre);
-            System.out.println(respuesta);
             if (respuesta.get("RESULTADO_PETICION").equals("USUARIO_EXISTE")) {
                 return User.builder()
                         .username(nombre)
