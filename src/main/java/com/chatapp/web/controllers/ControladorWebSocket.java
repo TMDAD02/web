@@ -37,7 +37,6 @@ public class ControladorWebSocket {
             simpMessagingTemplate.convertAndSend("/topic/messages/" + to, mensaje);
         }
         servicioChat.guardarMensaje(mensaje, destinatarioConectado);
-
     }
 
     @MessageMapping("/chatroom/{to}")
