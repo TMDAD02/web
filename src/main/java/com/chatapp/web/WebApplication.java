@@ -1,6 +1,6 @@
 package com.chatapp.web;
 
-import com.chatapp.web.ficheros.StorageService;
+import com.chatapp.web.services.StorageService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

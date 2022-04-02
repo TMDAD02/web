@@ -1,6 +1,5 @@
-package com.chatapp.web.ficheros;
+package com.chatapp.web.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -19,50 +18,31 @@ import java.util.stream.Stream;
 @Service
 public class FileSystemStorageService implements StorageService {
 
-	private final Path rootLocation;
+	private final String LOCAL_PATH = "upload_dir";
+	private final Path rootLocation = Paths.get(LOCAL_PATH);
 
-	@Autowired
-	public FileSystemStorageService(StorageProperties properties) {
-		this.rootLocation = Paths.get(properties.getLocation());
-	}
 
 	@Override
 	public String store(MultipartFile file, String sender) {
 		try {
-			if (file.isEmpty()) {
-				throw new StorageException("Failed to store empty file.");
-			}
 			String generatedFilename = generateFilename(sender, file.getOriginalFilename());
 			Path destinationFile = this.rootLocation.resolve(generatedFilename)
 					.normalize().toAbsolutePath();
 
-			if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
-				throw new StorageException("Cannot store file outside current directory.");
+			if (file.isEmpty() || !destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
+				throw new IOException("Failed to store empty file.");
 			}
+
 			try (InputStream inputStream = file.getInputStream()) {
 				Files.copy(inputStream, destinationFile,
 					StandardCopyOption.REPLACE_EXISTING);
 				return generatedFilename;
 			}
+		} catch (IOException e) {
+			return null;
 		}
-		catch (IOException e) {
-			throw new StorageException("Failed to store file.", e);
-		}
-
 	}
 
-	@Override
-	public Stream<Path> loadAll() {
-		try {
-			return Files.walk(this.rootLocation, 1)
-				.filter(path -> !path.equals(this.rootLocation))
-				.map(this.rootLocation::relativize);
-		}
-		catch (IOException e) {
-			throw new StorageException("Failed to read stored files", e);
-		}
-
-	}
 
 	@Override
 	public Path load(String filename) {
@@ -78,20 +58,15 @@ public class FileSystemStorageService implements StorageService {
 				return resource;
 			}
 			else {
-				throw new StorageFileNotFoundException(
-						"Could not read file: " + filename);
-
+				System.out.println("Could not read file: " + filename);
 			}
 		}
 		catch (MalformedURLException e) {
-			throw new StorageFileNotFoundException("Could not read file: " + filename, e);
+			System.out.println("Could not read file: " + e);
 		}
+		return null;
 	}
 
-	@Override
-	public void deleteAll() {
-		FileSystemUtils.deleteRecursively(rootLocation.toFile());
-	}
 
 	@Override
 	public void init() {
@@ -99,7 +74,7 @@ public class FileSystemStorageService implements StorageService {
 			Files.createDirectories(rootLocation);
 		}
 		catch (IOException e) {
-			throw new StorageException("Could not initialize storage", e);
+			System.out.println("No se puede inicializar FS: " + e.getMessage());
 		}
 	}
 

@@ -1,4 +1,4 @@
-package com.chatapp.web.ficheros;
+package com.chatapp.web.services;
 
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Repository;
@@ -10,15 +10,10 @@ import java.util.stream.Stream;
 public interface StorageService {
 
 	void init();
-
 	String store(MultipartFile file, String sender);
-
-	Stream<Path> loadAll();
-
+	Resource loadAsResource(String filename);
 	Path load(String filename);
 
-	Resource loadAsResource(String filename);
 
-	void deleteAll();
 
 }

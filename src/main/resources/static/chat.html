@@ -458,11 +458,13 @@ function send_chat(){
 function send_message(msg) {
     var compiledSending = _.template(SENDING_TEMPLATE)
 
-    var jsonString =  JSON.stringify({'contenido': msg, 'fuente': myUsername, 'destino':currentTo});
-    stompClient.send("/app/chat/" + currentTo, {'username': currentTo}, jsonString);
-    mensaje = compiledSending({msg:msg,usr:myUsername,datetim:getCurrentTime(),avat:"https://muratselek.com.tr/wp-content/uploads/2019/01/yorum-icon-avatar-men-768x768.png"});
+    if (msg.length < 500) {
+        var jsonString =  JSON.stringify({'contenido': msg, 'fuente': myUsername, 'destino':currentTo});
+        stompClient.send("/app/chat/" + currentTo, {'username': currentTo}, jsonString);
+        mensaje = compiledSending({msg:msg,usr:myUsername,datetim:getCurrentTime(),avat:"https://muratselek.com.tr/wp-content/uploads/2019/01/yorum-icon-avatar-men-768x768.png"});
 
-    $("#chat_base").append(mensaje);
+        $("#chat_base").append(mensaje);
+    }
 }
 
 function send_file(){

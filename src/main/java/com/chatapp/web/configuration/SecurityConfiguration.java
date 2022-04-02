@@ -1,6 +1,5 @@
 package com.chatapp.web.configuration;
 
-import com.chatapp.web.ficheros.StorageProperties;
 import com.chatapp.web.services.ServicioUsuarios;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -61,12 +60,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-
-
-    @Bean
-    public com.chatapp.web.ficheros.StorageProperties myStorageProperties(){
-        return new StorageProperties();
-    }
 
 
 }

@@ -1,7 +1,6 @@
 package com.chatapp.web.controllers;
 
 import java.io.IOException;
-        import java.util.stream.Collectors;
 
 import com.chatapp.web.models.Mensaje;
 import org.json.JSONException;
@@ -13,18 +12,14 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
         import org.springframework.ui.Model;
-        import org.springframework.web.bind.annotation.ExceptionHandler;
-        import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.GetMapping;
         import org.springframework.web.bind.annotation.PathVariable;
         import org.springframework.web.bind.annotation.PostMapping;
         import org.springframework.web.bind.annotation.RequestParam;
         import org.springframework.web.bind.annotation.ResponseBody;
         import org.springframework.web.multipart.MultipartFile;
-        import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
-        import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-        import com.chatapp.web.ficheros.StorageFileNotFoundException;
-        import com.chatapp.web.ficheros.StorageService;
+import com.chatapp.web.services.StorageService;
 
 @Controller
 public class ControladorFicheros {
@@ -40,14 +35,8 @@ public class ControladorFicheros {
     }
 
     @GetMapping("/")
-    public String listUploadedFiles(Model model) throws IOException {
-
-        model.addAttribute("files", storageService.loadAll().map(
-                        path -> MvcUriComponentsBuilder.fromMethodName(ControladorFicheros.class,
-                                "serveFile", path.getFileName().toString()).build().toUri().toString())
-                .collect(Collectors.toList()));
-
-        return "uploadForm";
+    public String setRootPath(Model model) throws IOException {
+        return "redirect:/chat.html";
     }
 
     @GetMapping(PUBLIC_FILES_PATH + "/{filename:.+}")
@@ -63,13 +52,12 @@ public class ControladorFicheros {
                                    @RequestParam("currentTo") String destino, @AuthenticationPrincipal final UserDetails ud) throws JSONException {
         System.out.println("Fichero subido por : " + ud.getUsername() + " para " + destino);
         String filename = storageService.store(file, ud.getUsername());
-        controladorWebSocket.enviarMensajeFichero(new Mensaje(ud.getUsername(), "<a href=" + PUBLIC_FILES_PATH + "/" + filename + " >" + filename + "</a>", destino));
+        if(filename != null) {
+            controladorWebSocket.enviarMensajeFichero(new Mensaje(ud.getUsername(), "<a href=" + PUBLIC_FILES_PATH + "/" + filename + " >" + filename + "</a>", destino));
+        }
         return "redirect:/chat.html?&to=" + destino;
     }
 
-    @ExceptionHandler(StorageFileNotFoundException.class)
-    public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
-        return ResponseEntity.notFound().build();
-    }
+
 
 }
