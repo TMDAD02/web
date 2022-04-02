@@ -16,6 +16,8 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.util.stream.Collectors;
 
+import static com.chatapp.web.models.Mensaje.TAMANIO_MAXIMO;
+
 
 @Controller
 public class ControladorWebSocket {
@@ -33,11 +35,13 @@ public class ControladorWebSocket {
     @MessageMapping("/chat/{to}")
     public void tratarChatPuntoPunto(@DestinationVariable String to, Mensaje mensaje) throws Exception {
         System.out.println("Mensaje: " + mensaje);
-        boolean destinatarioConectado = esUsuarioConectado(to);
-        if(destinatarioConectado) {
-            simpMessagingTemplate.convertAndSend("/topic/" + to, mensaje);
+        if (mensaje.getContenido().length() < TAMANIO_MAXIMO) {
+            boolean destinatarioConectado = esUsuarioConectado(to);
+            if (destinatarioConectado) {
+                simpMessagingTemplate.convertAndSend("/topic/" + to, mensaje);
+            }
+            servicioChat.guardarMensaje(mensaje, destinatarioConectado);
         }
-        servicioChat.guardarMensaje(mensaje, destinatarioConectado);
     }
 
     @MessageMapping("/chatroom/{to}")
@@ -54,14 +58,13 @@ public class ControladorWebSocket {
     }
 
     public void enviarMensajeFichero(Mensaje mensaje) throws JSONException {
-        if (mensaje.getContenido().length() < 500) {
-            boolean destinatarioConectado = esUsuarioConectado(mensaje.getDestino());
-            System.out.println(mensaje);
-            if(esUsuarioConectado(mensaje.getDestino())) {
-                simpMessagingTemplate.convertAndSend("/topic/" + mensaje.getDestino(), mensaje);
-            }
-            servicioChat.guardarMensaje(mensaje, destinatarioConectado);
+        boolean destinatarioConectado = esUsuarioConectado(mensaje.getDestino());
+        System.out.println(mensaje);
+        if(esUsuarioConectado(mensaje.getDestino())) {
+            simpMessagingTemplate.convertAndSend("/topic/" + mensaje.getDestino(), mensaje);
         }
+        servicioChat.guardarMensaje(mensaje, destinatarioConectado);
+
     }
 
 

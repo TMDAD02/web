@@ -1,7 +1,7 @@
 package com.chatapp.web.models;
 
 public class Mensaje {
-
+    public static final int TAMANIO_MAXIMO = 500;
     private String fuente;
     private String contenido;
     private String destino;

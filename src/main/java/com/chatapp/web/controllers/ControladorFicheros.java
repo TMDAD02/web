@@ -19,18 +19,18 @@ import org.springframework.web.bind.annotation.GetMapping;
         import org.springframework.web.bind.annotation.ResponseBody;
         import org.springframework.web.multipart.MultipartFile;
 
-import com.chatapp.web.services.StorageService;
+import com.chatapp.web.services.ServicioAlmacenamiento;
 
 @Controller
 public class ControladorFicheros {
 
     @Autowired
     private ControladorWebSocket controladorWebSocket;
-    private final StorageService storageService;
+    private final ServicioAlmacenamiento storageService;
     private static final String PUBLIC_FILES_PATH = "/files";
 
     @Autowired
-    public ControladorFicheros(StorageService storageService) {
+    public ControladorFicheros(ServicioAlmacenamiento storageService) {
         this.storageService = storageService;
     }
 
