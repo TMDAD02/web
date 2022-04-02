@@ -54,12 +54,14 @@ public class ControladorWebSocket {
     }
 
     public void enviarMensajeFichero(Mensaje mensaje) throws JSONException {
-        boolean destinatarioConectado = esUsuarioConectado(mensaje.getDestino());
-        System.out.println(mensaje);
-        if(esUsuarioConectado(mensaje.getDestino())) {
-            simpMessagingTemplate.convertAndSend("/topic/" + mensaje.getDestino(), mensaje);
+        if (mensaje.getContenido().length() < 500) {
+            boolean destinatarioConectado = esUsuarioConectado(mensaje.getDestino());
+            System.out.println(mensaje);
+            if(esUsuarioConectado(mensaje.getDestino())) {
+                simpMessagingTemplate.convertAndSend("/topic/" + mensaje.getDestino(), mensaje);
+            }
+            servicioChat.guardarMensaje(mensaje, destinatarioConectado);
         }
-        servicioChat.guardarMensaje(mensaje, destinatarioConectado);
     }
 
 
