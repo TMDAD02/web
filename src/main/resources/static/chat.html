@@ -171,21 +171,13 @@ img {
                         <button class="btn btn-primary btn-sm" id="btn-chat" onclick="send_chat()">Send</button>
                         </span>
                     </div>
-                    <div>
+                    <div id="user_upload">
                         <!--
                         <input id="input-file" type="file" name="file" />
                         <span class="input-group-btn">
                         <button class="btn btn-primary btn-sm" id="btn-file" onclick="send_file()">Send</button>
                         </span> action="/chat"
                         -->
-                        <form method="POST" enctype="multipart/form-data"  action="/file" >
-                            <table>
-                                <tr><td><input id="input-file" type="file" name="file" /></td>
-                                    <input type="hidden" name="currentTo" value="xd" />
-                                    <td><input type="submit" value="Subir"/></td>
-                                </tr>
-                            </table>
-                        </form>
 
                     </div>
                 </div>                
@@ -323,6 +315,7 @@ stompClient = Stomp.client('ws://localhost:8888/ws');
 getUsers()
 getUnreadMessages()
 getMessages()
+setUploadButton()
 
 
 
@@ -354,6 +347,19 @@ function getUsers() {
         });
         $("#user_base").html(todos);
     });
+}
+
+function setUploadButton() {
+    uploadTemplate = "<form method=\"POST\" enctype=\"multipart/form-data\"  action=\"/file\" >\n" +
+        "                            <table>\n" +
+        "                                <tr><td><input id=\"input-file\" type=\"file\" name=\"file\" /></td>\n" +
+        "                                    <input type=\"hidden\" name=\"currentTo\" value=\"<%= currentTo %>\" />\n" +
+        "                                    <td><input type=\"submit\" value=\"Subir\"/></td>\n" +
+        "                                </tr>\n" +
+        "                            </table>\n" +
+        "                        </form>"
+    var compiledUploadTemplate = _.template(uploadTemplate);
+    $("#user_upload").html(compiledUploadTemplate({'currentTo': currentTo}));
 }
 
 function getMessages() {

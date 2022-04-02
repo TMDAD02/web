@@ -55,6 +55,7 @@ public class ControladorWebSocket {
 
     public void enviarMensajeFichero(Mensaje mensaje) throws JSONException {
         boolean destinatarioConectado = esUsuarioConectado(mensaje.getDestino());
+        System.out.println(mensaje);
         if(esUsuarioConectado(mensaje.getDestino())) {
             simpMessagingTemplate.convertAndSend("/topic/" + mensaje.getDestino(), mensaje);
         }

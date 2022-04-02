@@ -31,8 +31,8 @@ public class ControladorFicheros {
 
     @Autowired
     private ControladorWebSocket controladorWebSocket;
-
     private final StorageService storageService;
+    private static final String PUBLIC_FILES_PATH = "/files";
 
     @Autowired
     public ControladorFicheros(StorageService storageService) {
@@ -50,7 +50,7 @@ public class ControladorFicheros {
         return "uploadForm";
     }
 
-    @GetMapping("/files/{filename:.+}")
+    @GetMapping(PUBLIC_FILES_PATH + "/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
         Resource file = storageService.loadAsResource(filename);
@@ -61,10 +61,10 @@ public class ControladorFicheros {
     @PostMapping("/file")
     public String handleFileUpload(@RequestParam("file") MultipartFile file,
                                    @RequestParam("currentTo") String destino, @AuthenticationPrincipal final UserDetails ud) throws JSONException {
-        System.out.println("Fichero subido por : " + ud.getUsername() + "para" + destino);
-        storageService.store(file, ud.getUsername());
-        controladorWebSocket.enviarMensajeFichero(new Mensaje(ud.getUsername(), "<a href=prueba.txt>fichero xd</a>", "to"));
-        return "redirect:/chat.html";
+        System.out.println("Fichero subido por : " + ud.getUsername() + " para " + destino);
+        String filename = storageService.store(file, ud.getUsername());
+        controladorWebSocket.enviarMensajeFichero(new Mensaje(ud.getUsername(), "<a href=" + PUBLIC_FILES_PATH + "/" + filename + " >" + filename + "</a>", destino));
+        return "redirect:/chat.html?&to=" + destino;
     }
 
     @ExceptionHandler(StorageFileNotFoundException.class)
