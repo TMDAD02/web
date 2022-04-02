@@ -1,9 +1,6 @@
 package com.chatapp.web.controllers;
 
-import com.chatapp.web.configuration.JWT;
-import com.chatapp.web.configuration.JWTTokenUtil;
 import com.chatapp.web.services.ServicioUsuarios;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,23 +9,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Map;
 
 import static com.chatapp.web.services.ServicioUsuarios.MASTER_PASSWORD;
 
 
 @RestController
 public class ControladorUsuarios {
-
 
     @Autowired
     private ServicioUsuarios servicioUsuarios;
@@ -38,8 +31,7 @@ public class ControladorUsuarios {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private JWTTokenUtil jwtTokenUtil;
+
 
     /*
     @PostMapping(path = "/usuario", consumes = "application/json", produces = "application/json")
@@ -58,20 +50,19 @@ public class ControladorUsuarios {
 
 */
     @PostMapping(path = "/autenticar")
-    public void autenticar(@RequestParam String nombre, HttpServletResponse response) {
+    public ResponseEntity<String> autenticar(@RequestParam String nombre, HttpServletResponse response) {
         Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(nombre, MASTER_PASSWORD));
         SecurityContextHolder.getContext().setAuthentication(auth);
         UserDetails userDetails = (UserDetails) auth.getPrincipal();
-        String token = jwtTokenUtil.generateToken(userDetails);
-        response.addCookie(new Cookie("token", token));
         response.addCookie(new Cookie("usuario", userDetails.getUsername()));
 
+        return ResponseEntity.ok().body("");
     }
 
     @GetMapping(path = "/usuarios")
-    public ResponseEntity<?> obtenerUsuarios() {
+    public ResponseEntity<?> obtenerUsuarios(@AuthenticationPrincipal final UserDetails ud) {
         try {
-            UserDetails ud = (UserDetails) (SecurityContextHolder.getContext().getAuthentication()).getPrincipal();
+            //UserDetails ud = (UserDetails) (SecurityContextHolder.getContext().getAuthentication()).getPrincipal();
             JSONObject respuesta = servicioUsuarios.obtenerTodosUsuarios(ud.getUsername());
             System.out.println(respuesta);
             if(respuesta.getString(RESULTADO_RESPUESTA_NOMBRE).equals("OBTENER_TODOS_USUARIOS_CORRECTO")) {
@@ -84,17 +75,6 @@ public class ControladorUsuarios {
         }
         return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
-
-
-
-    @GetMapping(path = "/ejemplo")
-    public ResponseEntity<?> hola() {
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-
-
 /*
     @GetMapping(path = "/notificaciones", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> obtenerNotificaciones(@RequestParam String id_usuario){

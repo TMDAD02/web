@@ -13,6 +13,7 @@ public class Mensaje {
     }
 
     public Mensaje() {
+
     }
 
     public String getFuente() {

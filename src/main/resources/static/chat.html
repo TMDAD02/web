@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <!-- This file has been downloaded from Bootsnipp.com. Enjoy! -->
@@ -170,7 +170,24 @@ img {
                         <span class="input-group-btn">
                         <button class="btn btn-primary btn-sm" id="btn-chat" onclick="send_chat()">Send</button>
                         </span>
-                    </div>                    
+                    </div>
+                    <div>
+                        <!--
+                        <input id="input-file" type="file" name="file" />
+                        <span class="input-group-btn">
+                        <button class="btn btn-primary btn-sm" id="btn-file" onclick="send_file()">Send</button>
+                        </span> action="/chat"
+                        -->
+                        <form method="POST" enctype="multipart/form-data"  action="/file" >
+                            <table>
+                                <tr><td><input id="input-file" type="file" name="file" /></td>
+                                    <input type="hidden" name="currentTo" value="xd" />
+                                    <td><input type="submit" value="Subir"/></td>
+                                </tr>
+                            </table>
+                        </form>
+
+                    </div>
                 </div>                
             </div>
                                 
@@ -198,6 +215,7 @@ img {
                 </div>   
                 
     </div>
+
     
     <!-- <div class="btn-group dropup">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -286,7 +304,7 @@ stompClient = Stomp.client('ws://localhost:8888/ws');
     stompClient.connect({"username": myUsername}, function (frame) {
         showConnected()
         reconnectAttempts = 0;
-        stompClient.subscribe('/topic/messages/'+myUsername, function (message) {
+        stompClient.subscribe('/topic/'+myUsername, function (message) {
             handleNewMessage(message)
         });
     }, function (frame) {
@@ -439,6 +457,14 @@ function send_message(msg) {
     mensaje = compiledSending({msg:msg,usr:myUsername,datetim:getCurrentTime(),avat:"https://muratselek.com.tr/wp-content/uploads/2019/01/yorum-icon-avatar-men-768x768.png"});
 
     $("#chat_base").append(mensaje);
+}
+
+function send_file(){
+    msg=$("#input-file").val();
+    send_message(msg);
+    bajalo();
+    $("#btn-input").val("");
+    $("#btn-input").focus();
 }
 
 function bajalo(){

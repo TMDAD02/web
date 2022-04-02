@@ -33,7 +33,6 @@ public class ServicioChat {
         solicitud.put(PARAMETROS, parametros);
 
         rabbit.enviaryRecibirMensaje(solicitud);
-
     }
 
     public JSONObject obtenerMensajes(String fuente, String destinatario) throws JSONException {
