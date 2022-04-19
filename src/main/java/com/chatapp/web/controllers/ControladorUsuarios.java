@@ -75,6 +75,9 @@ public class ControladorUsuarios {
         }
         return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+
+
 /*
     @GetMapping(path = "/notificaciones", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> obtenerNotificaciones(@RequestParam String id_usuario){

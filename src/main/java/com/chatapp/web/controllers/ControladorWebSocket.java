@@ -8,6 +8,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.user.SimpUser;
 import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.stereotype.Controller;
@@ -37,15 +38,27 @@ public class ControladorWebSocket {
         System.out.println("Mensaje: " + mensaje);
         if (mensaje.getContenido().length() < TAMANIO_MAXIMO) {
             boolean destinatarioConectado = esUsuarioConectado(to);
-            if (destinatarioConectado) {
+            //if (destinatarioConectado) {
                 simpMessagingTemplate.convertAndSend("/topic/" + to, mensaje);
-            }
+            //}
             servicioChat.guardarMensaje(mensaje, destinatarioConectado);
         }
     }
 
     @MessageMapping("/chatroom/{to}")
     public void chatroomHandler(@DestinationVariable String to, Mensaje message) throws Exception {
+
+        /**
+         * List<String> usuarios = servicioGrupo.obtenerTodosIntegrantes(to);
+         * for (String usuario : usuarios) {
+         *      if(esUsuarioConectado(usuario)) {
+         *          simpMessagingTemplate.convertAndSend("/topic/" + usuario, mensaje);
+         *      }
+         * }
+         *
+         * servicioGrupo.guardarMensaje(mensaje, usuariosConectados)
+         *
+         */
         System.out.println("Current users: " + this.simpUserRegistry
                 .getUsers()
                 .stream()
@@ -56,6 +69,13 @@ public class ControladorWebSocket {
         }
 
     }
+
+    @MessageMapping("/chat/addUser")
+    public void addUser(SimpMessageHeaderAccessor headerAccessor, Mensaje message) {
+        // Add username in web socket session
+        headerAccessor.getSessionAttributes().put("username", message.getFuente());
+    }
+
 
     public void enviarMensajeFichero(Mensaje mensaje) throws JSONException {
         boolean destinatarioConectado = esUsuarioConectado(mensaje.getDestino());

@@ -208,6 +208,50 @@ img {
                 
     </div>
 
+    <div class="row chat-window  col-md-4 col-xs-2" id="chat_window_1" >
+        <div class="panel panel-default">
+            <div class="panel-heading top-bar">
+                <div class="col-md-10 col-xs-10">
+                    <h3 class="panel-title">
+                            <span class="glyphicon glyphicon-comment">
+                             <p id="username"> Grupos</p> </span> </h3>
+                </div>
+                <div class="input-group">
+
+                    <input id="btn-input-create" type="text" class="form-control input-sm chat_input" placeholder="Insert name of new group..." />
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary btn-sm" id="btn-chat" onclick="create_group()">create group</button>
+                        </span>
+
+                </div>
+                <div class="input-group">
+                    <input id="btn-input-remove" type="text" class="form-control input-sm chat_input" placeholder="Insert group name to remove.." />
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary btn-sm" id="btn-chat" onclick="remove_group()">remove group</button>
+                        </span>
+                </div>
+                <div class="input-group">
+                    <input id="btn-input-nombreusuario" type="text" class="form-control input-sm chat_input" placeholder="Insert nombre usuario añadir.." />
+                    <input id="btn-input-nombregrupo" type="text" class="form-control input-sm chat_input" placeholder="Insert nombre grupo añadir.." />
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary btn-sm" id="btn-chat" onclick="add_user()">add user</button>
+                        </span>
+                </div>
+
+            </div>
+            <div class="panel-body msg_container_base"  >
+
+                <div class="col-xs-30 col-md-20" style="margin-top:10px;">
+                    <div class="messages"  id="group_base" style="align:left;">
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
     
     <!-- <div class="btn-group dropup">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -292,7 +336,7 @@ $("#username").text(currentTo);
         $( "#chat_window_1" ).remove();
     });
 
-stompClient = Stomp.client('ws://localhost:8888/ws');
+    stompClient = Stomp.client('ws://localhost:8888/ws');
     stompClient.connect({"username": myUsername}, function (frame) {
         showConnected()
         reconnectAttempts = 0;
@@ -313,6 +357,7 @@ stompClient = Stomp.client('ws://localhost:8888/ws');
 
 
 getUsers()
+getGroups()
 getUnreadMessages()
 getMessages()
 setUploadButton()
@@ -346,6 +391,26 @@ function getUsers() {
             todos += msg
         });
         $("#user_base").html(todos);
+    });
+}
+
+function getGroups() {
+    usuarioTemplate = "<a href='chat.html?&to=<%= usr %>'> <%= usr %> </a><br>"
+    var compiledUsuarioTemplate = _.template(usuarioTemplate);
+    var todos = ""
+    url = "http://localhost:8888/grupos"
+    $.getJSON( url, function(data) {
+        console.log(data);
+        var listaGrupos = data.listaGrupos;
+        listaGrupos.forEach(function(connectedUser) {
+            console.log(connectedUser);
+            var msg = compiledUsuarioTemplate({'username': myUsername, usr:connectedUser});
+            todos += msg
+            stompClient.subscribe('/topic/'+connectedUser, function (message) {
+                handleNewMessage(message)
+            });
+        });
+        $("#group_base").html(todos);
     });
 }
 
@@ -453,6 +518,54 @@ function send_chat(){
     bajalo(); 
     $("#btn-input").val("");
     $("#btn-input").focus();
+}
+
+function create_group(){
+    msg=$("#btn-input-create").val();
+    //send_message(msg);
+
+    url = "http://localhost:8888/crearGrupo?nombreGrupo="+msg;
+    $.getJSON(url, function(mensajes) {
+        console.log(mensajes);
+        /*var listaMensajes = mensajes.listaMensajes;
+        listaMensajes.forEach(function(mensaje) {
+            alert("--- MENSAJE NO LEIDO DE " + mensaje.fuente + " --- " + mensaje.contenido);
+        });*/
+    });
+    //bajalo();
+    /*stompClient.subscribe('/topic/'+msg, function (message) {
+            handleNewMessage(message)
+        });*/
+    $("#btn-input-create").val("");
+    $("#btn-input-create").focus();
+    window.location.reload();
+}
+
+function remove_group(){
+    msg=$("#btn-input-remove").val();
+    //send_message(msg);
+    url = "http://localhost:8888/eliminarGrupo?nombreGrupo="+msg;
+    $.getJSON(url, function(mensajes) {
+        console.log(mensajes);
+    });
+    bajalo();
+    $("#btn-input-remove").val("");
+    $("#btn-input-remove").focus();
+}
+
+function add_user(){
+    msg1=$("#btn-input-nombreusuario").val();
+    msg2=$("#btn-input-nombregrupo").val();
+    //msg = msg1+","+msg2;
+    url = "http://localhost:8888/anadirUsuarioGrupo?nombreUsuario="+msg1+"&nombreGrupo="+msg2;
+    $.getJSON(url, function(mensajes) {
+        console.log(mensajes);
+    });
+    //bajalo();
+    $("#btn-input-nombreusuario").val("");
+    $("#btn-input-nombreusuario").focus();
+    $("#btn-input-nombregrupo").val("");
+    $("#btn-input-nombregrupo").focus();
 }
 
 function send_message(msg) {
