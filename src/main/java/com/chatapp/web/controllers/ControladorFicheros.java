@@ -34,10 +34,6 @@ public class ControladorFicheros {
         this.storageService = storageService;
     }
 
-    @GetMapping("/")
-    public String setRootPath(Model model) throws IOException {
-        return "redirect:/chat.html";
-    }
 
     @GetMapping(PUBLIC_FILES_PATH + "/{filename:.+}")
     @ResponseBody
@@ -55,7 +51,7 @@ public class ControladorFicheros {
         if(filename != null) {
             controladorWebSocket.enviarMensajeFichero(new Mensaje(ud.getUsername(), "<a href=" + PUBLIC_FILES_PATH + "/" + filename + " >" + filename + "</a>", destino));
         }
-        return "redirect:/chat.html?&to=" + destino;
+        return "redirect:/chat?&to=" + destino;
     }
 
 

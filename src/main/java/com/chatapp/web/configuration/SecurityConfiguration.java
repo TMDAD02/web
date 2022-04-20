@@ -36,21 +36,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
-    /**
-     * Declare URL permissions by roles, login handling
-     * and set JWT filter
-     *
-     * @param http
-     * @throws Exception
-     */
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable().authorizeRequests()
-                .antMatchers("/chat.html").hasAnyRole("USUARIO").and()
-                .formLogin().loginPage("/acceso.html").defaultSuccessUrl("/chat.html").permitAll().and()
+        http.csrf().disable().authorizeRequests()
+                .antMatchers("/chat").hasAnyRole("USUARIO").and()
+                .formLogin().loginPage("/login").defaultSuccessUrl("/chat").permitAll().and()
                 .authorizeRequests().anyRequest().permitAll();//.and()
-          //      .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        //      .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         //http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }

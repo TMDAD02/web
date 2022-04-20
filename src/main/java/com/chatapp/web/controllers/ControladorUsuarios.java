@@ -31,24 +31,13 @@ public class ControladorUsuarios {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-
-
-    /*
-    @PostMapping(path = "/usuario", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> registro(@RequestParam String nombre, @RequestParam String contrasena, @RequestParam String email) {
-        try {
-            System.out.println("Hello world");
-            JSONObject respuesta = servicioUsuarios.registrar(nombre, contrasena, email, "USER");
-            if(respuesta.getString(RESULTADO_RESPUESTA_NOMBRE).equals("REGISTRO_CORRECTO")){
-                return new ResponseEntity<>( "{}", HttpStatus.ACCEPTED);
-            }
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        } catch (Throwable throwable) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @GetMapping(path = "/miusuario")
+    public ResponseEntity<?> obtenerUsuario(@AuthenticationPrincipal final UserDetails ud, HttpServletResponse response) throws JSONException {
+        JSONObject parametros = new JSONObject();
+        parametros.put("usuario", ud.getUsername());
+        return new ResponseEntity<>(parametros.toString(), HttpStatus.OK);
     }
 
-*/
     @PostMapping(path = "/autenticar")
     public ResponseEntity<String> autenticar(@RequestParam String nombre, HttpServletResponse response) {
         Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(nombre, MASTER_PASSWORD));
@@ -78,17 +67,4 @@ public class ControladorUsuarios {
 
 
 
-/*
-    @GetMapping(path = "/notificaciones", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> obtenerNotificaciones(@RequestParam String id_usuario){
-        try {
-            if (servicioUsuarios.existeUsuario(id_usuario, false)){
-                return new ResponseEntity<>(servicioUsuarios.obtenerNotificaciones(id_usuario).toString(), HttpStatus.ACCEPTED);
-            }
-            return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (Throwable e){
-            return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-    */
 }
