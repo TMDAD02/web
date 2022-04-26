@@ -1,6 +1,7 @@
 package com.chatapp.web.controllers;
 
 import com.chatapp.web.models.Mensaje;
+import com.chatapp.web.scheduled.Metricas;
 import com.chatapp.web.services.ServicioChat;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,54 +33,27 @@ public class ControladorWebSocket {
     @Autowired
     private ServicioChat servicioChat;
 
+    @Autowired
+    private Metricas metricas;
+
 
     @MessageMapping("/chat/{to}")
     public void tratarChatPuntoPunto(@DestinationVariable String to, Mensaje mensaje) throws Exception {
         System.out.println("Mensaje: " + mensaje);
         if (mensaje.getContenido().length() < TAMANIO_MAXIMO) {
+            metricas.incrementMessages();
+            metricas.incrementBytes(mensaje.getContenido().getBytes().length);
             boolean destinatarioConectado = esUsuarioConectado(to);
-            //if (destinatarioConectado) {
-                simpMessagingTemplate.convertAndSend("/topic/" + to, mensaje);
-            //}
+            simpMessagingTemplate.convertAndSend("/topic/" + to, mensaje);
             servicioChat.guardarMensaje(mensaje, destinatarioConectado);
         }
-    }
-
-    @MessageMapping("/chatroom/{to}")
-    public void chatroomHandler(@DestinationVariable String to, Mensaje message) throws Exception {
-
-        /**
-         * List<String> usuarios = servicioGrupo.obtenerTodosIntegrantes(to);
-         * for (String usuario : usuarios) {
-         *      if(esUsuarioConectado(usuario)) {
-         *          simpMessagingTemplate.convertAndSend("/topic/" + usuario, mensaje);
-         *      }
-         * }
-         *
-         * servicioGrupo.guardarMensaje(mensaje, usuariosConectados)
-         *
-         */
-        System.out.println("Current users: " + this.simpUserRegistry
-                .getUsers()
-                .stream()
-                .map(SimpUser::getName)
-                .collect(Collectors.toList()));
-        if(esUsuarioConectado(to)) {
-            simpMessagingTemplate.convertAndSend("/topic/messages/" + to, message);
-        }
-
-    }
-
-    @MessageMapping("/chat/addUser")
-    public void addUser(SimpMessageHeaderAccessor headerAccessor, Mensaje message) {
-        // Add username in web socket session
-        headerAccessor.getSessionAttributes().put("username", message.getFuente());
     }
 
 
     public void enviarMensajeFichero(Mensaje mensaje) throws JSONException {
         boolean destinatarioConectado = esUsuarioConectado(mensaje.getDestino());
-        System.out.println(mensaje);
+        metricas.incrementMessages();
+        metricas.incrementBytes(mensaje.getContenido().getBytes().length);
         if(esUsuarioConectado(mensaje.getDestino())) {
             simpMessagingTemplate.convertAndSend("/topic/" + mensaje.getDestino(), mensaje);
         }

@@ -1,5 +1,7 @@
 package com.chatapp.web.services;
 
+import com.chatapp.web.scheduled.Metricas;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ public class ServicioAlmacenamientoFS implements ServicioAlmacenamiento {
 	private final String LOCAL_PATH = "upload_dir";
 	private final Path rootLocation = Paths.get(LOCAL_PATH);
 
+	@Autowired
+	private Metricas metricas;
 
 	@Override
 	public String store(MultipartFile file, String sender) {
@@ -30,7 +34,7 @@ public class ServicioAlmacenamientoFS implements ServicioAlmacenamiento {
 			if (file.isEmpty() || !destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
 				throw new IOException("Failed to store empty file.");
 			}
-
+			//metricas.incrementBytes(file.getBytes().length);
 			try (InputStream inputStream = file.getInputStream()) {
 				Files.copy(inputStream, destinationFile,
 					StandardCopyOption.REPLACE_EXISTING);
