@@ -117,4 +117,23 @@ public class ServicioGrupos implements UserDetailsService{
         return rabbit.enviaryRecibirMensaje(solicitud);
     }
 
+    public JSONObject eliminarUsuarioGrupo(String miUsuario, String nombreUsuario, String nombreGrupo) throws JSONException {
+
+        JSONObject solicitud = new JSONObject();
+        solicitud.put(NOMBRE_COMANDO, "ELIMINAR_USUARIO_GRUPO");
+
+        //String[] splitted = nombreUsuarioGrupo.split(",");
+        //System.out.println("usuario: "+splitted[0]);
+        //System.out.println("grupo: "+splitted[1]);
+        System.out.println("ELIMINAR usario grupo");
+        System.out.println("nombre usuario es: "+ nombreUsuario);
+
+        JSONObject parametros = new JSONObject();
+        parametros.put("miusuario", miUsuario);
+        parametros.put("nombreusuario", nombreUsuario);
+        parametros.put("nombregrupo", nombreGrupo);
+        solicitud.put(PARAMETROS, parametros);
+        return rabbit.enviaryRecibirMensaje(solicitud);
+    }
+
 }

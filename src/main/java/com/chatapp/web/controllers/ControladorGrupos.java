@@ -103,6 +103,23 @@ public class ControladorGrupos {
         return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @GetMapping(path = "/eliminarUsuarioGrupo")
+    public ResponseEntity<?> eliminarUsuarioGrupo(@RequestParam String nombreUsuario, @RequestParam String nombreGrupo, @AuthenticationPrincipal final UserDetails ud) {
+        try {
+
+            JSONObject respuesta = servicioGrupos.eliminarUsuarioGrupo(ud.getUsername(), nombreUsuario, nombreGrupo);
+            System.out.println(respuesta);
+            if(respuesta.getString(RESULTADO_RESPUESTA_NOMBRE).equals("ELIMINAR_USUARIO_GRUPO_CORRECTO")) {
+                JSONObject parametros = respuesta.getJSONObject(PARAMETROS_NOMBRE);
+                return new ResponseEntity<>(parametros.toString(), HttpStatus.OK);
+            }
+
+        } catch (JSONException e) {
+            return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     /*@GetMapping(path = "/mensajes", produces = "application/json")
     public ResponseEntity<?> obtenerMensajes(@RequestParam String destinatario) {
         try {
