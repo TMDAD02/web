@@ -3,6 +3,7 @@ package com.chatapp.web.controllers;
 import com.chatapp.web.models.Mensaje;
 import com.chatapp.web.scheduled.Metricas;
 import com.chatapp.web.services.ServicioChat;
+import com.chatapp.web.services.ServicioTrending;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
@@ -36,16 +37,21 @@ public class ControladorWebSocket {
     @Autowired
     private Metricas metricas;
 
+    @Autowired
+    private ServicioTrending servicioTrending;
+
 
     @MessageMapping("/chat/{to}")
     public void tratarChatPuntoPunto(@DestinationVariable String to, Mensaje mensaje) throws Exception {
         System.out.println("Mensaje: " + mensaje);
-        if (mensaje.getContenido().length() < TAMANIO_MAXIMO) {
+        String text = mensaje.getContenido();
+        if (text.length() < TAMANIO_MAXIMO) {
             metricas.incrementMessages();
-            metricas.incrementBytes(mensaje.getContenido().getBytes().length);
+            metricas.incrementBytes(text.getBytes().length);
             boolean destinatarioConectado = esUsuarioConectado(to);
             simpMessagingTemplate.convertAndSend("/topic/" + to, mensaje);
             servicioChat.guardarMensaje(mensaje, destinatarioConectado);
+            servicioTrending.update(text);
         }
     }
 

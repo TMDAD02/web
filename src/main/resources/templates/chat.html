@@ -270,6 +270,8 @@ img {
     </div>
     -->
 </div>
+<div id="trend_base">
+</div>
 <script type="text/javascript">
 
 $('<audio id="chatAudio"><source src="../snd/notify.ogg" type="audio/ogg"><source src="../snd/notify.mp3" type="audio/mpeg"><source src="../snd/notify.wav" type="audio/wav"></audio>').appendTo('body');
@@ -363,6 +365,7 @@ getGroups()
 getUnreadMessages()
 getMessages()
 setUploadButton()
+getTrend()
 
 function getMyUser() {
     url = "/miusuario"
@@ -444,6 +447,23 @@ function setUploadButton() {
         "                        </form>"
     var compiledUploadTemplate = _.template(uploadTemplate);
     $("#user_upload").html(compiledUploadTemplate({'currentTo': currentTo}));
+}
+
+function getTrend() {
+    trendTemplate = "<form method=\"POST\" action=\"/trend\" >\n" +
+        "                            <table>\n" +
+        "                                <tr><td><input type=\"submit\" value=\"Trend\"/></td>\n" +
+        "                                    <input type=\"hidden\" name=\"currentTo\" value=\"<%= currentTo %>\" />\n" +
+        "                                    <td><ul>\n" +
+        "                                           <li th:each=\"trend : ${trends}\">\n" +
+        "                                               <a th:href=\"${trend}\" th:text=\"${trend}\" />\n" +
+        "                                           </li>\n" +
+        "                                   </ul></td>\n" +
+        "                                </tr>\n" +
+        "                            </table>\n" +
+        "                        </form>"
+    var compiledTrendTemplate = _.template(trendTemplate);
+    $("#trend_base").html(compiledTrendTemplate({'currentTo': currentTo}));
 }
 
 function getMessages() {

@@ -1,6 +1,7 @@
 package com.chatapp.web;
 
 import com.chatapp.web.services.ServicioAlmacenamiento;
+import com.chatapp.web.services.ServicioTrending;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,10 +16,11 @@ public class WebApplication {
 	}
 
 	@Bean
-	CommandLineRunner init(ServicioAlmacenamiento storageService) {
+	CommandLineRunner init(ServicioAlmacenamiento storageService, ServicioTrending servicioTrending) {
 		return (args) -> {
 			//storageService.deleteAll();
 			storageService.init();
+			servicioTrending.init();
 		};
 	}
 }

@@ -231,8 +231,8 @@ img {
                         </span>
                 </div>
                 <div class="input-group">
-                    <input id="btn-input-nombreusuario" type="text" class="form-control input-sm chat_input" placeholder="Insert nombre usuario .." />
-                    <input id="btn-input-nombregrupo" type="text" class="form-control input-sm chat_input" placeholder="Insert nombre grupo .." />
+                    <input id="btn-input-nombreusuario" type="text" class="form-control input-sm chat_input" placeholder="Insertar nombre usuario .." />
+                    <input id="btn-input-nombregrupo" type="text" class="form-control input-sm chat_input" placeholder="Insertar nombre grupo .." />
                     <span class="input-group-btn">
                         <button class="btn btn-primary btn-sm" id="btn-chat" onclick="add_user()">add user</button>
                         <button class="btn btn-primary btn-sm" id="btn-chat" onclick="remove_user()">remove user</button>
@@ -268,6 +268,8 @@ img {
         </ul>
     </div>
     -->
+</div>
+<div id="trend_base">
 </div>
 <script type="text/javascript">
 
@@ -362,7 +364,7 @@ getGroups()
 getUnreadMessages()
 getMessages()
 setUploadButton()
-
+getTrend()
 
 
 function handleNewMessage(message) {
@@ -426,6 +428,23 @@ function setUploadButton() {
         "                        </form>"
     var compiledUploadTemplate = _.template(uploadTemplate);
     $("#user_upload").html(compiledUploadTemplate({'currentTo': currentTo}));
+}
+
+function getTrend() {
+    trendTemplate = "<form method=\"GET\" action=\"/trend\" >\n" +
+        "                            <table>\n" +
+        "                                <tr><td><input type=\"submit\" value=\"Trend\"/></td>\n" +
+        "                                    <input type=\"hidden\" name=\"currentTo\" value=\"<%= currentTo %>\" />\n" +
+        "                                    <td><ul>\n" +
+        "                                           <li th:each=\"trend : ${trends}\">\n" +
+        "                                               <a th:href=\"${trend}\" th:text=\"${trend}\" />\n" +
+        "                                           </li>\n" +
+        "                                   </ul></td>\n" +
+        "                                </tr>\n" +
+        "                            </table>\n" +
+        "                        </form>"
+    var compiledTrendTemplate = _.template(trendTemplate);
+    $("#trend_base").html(compiledTrendTemplate({'correntTo': currentTo}));
 }
 
 function getMessages() {
@@ -568,6 +587,23 @@ function add_user(){
     $("#btn-input-nombregrupo").val("");
     $("#btn-input-nombregrupo").focus();
 }
+
+function remove_user(){
+    msg1=$("#btn-input-nombreusuario").val();
+    msg2=$("#btn-input-nombregrupo").val();
+    //msg = msg1+","+msg2;
+    url = "http://localhost:8888/eliminarUsuarioGrupo?nombreUsuario="+msg1+"&nombreGrupo="+msg2;
+    $.getJSON(url, function(mensajes) {
+        console.log(mensajes);
+    });
+    //bajalo();
+    $("#btn-input-nombreusuario").val("");
+    $("#btn-input-nombreusuario").focus();
+    $("#btn-input-nombregrupo").val("");
+    $("#btn-input-nombregrupo").focus();
+}
+
+
 
 function send_message(msg) {
     var compiledSending = _.template(SENDING_TEMPLATE)
