@@ -450,7 +450,7 @@ function setUploadButton() {
 }
 
 function getTrend() {
-    trendTemplate = "<form method=\"POST\" action=\"/trend\" >\n" +
+    trendTemplate = "<form method=\"GET\" action=\"/trend\" >\n" +
         "                            <table>\n" +
         "                                <tr><td><input type=\"submit\" value=\"Trend\"/></td>\n" +
         "                                    <input type=\"hidden\" name=\"currentTo\" value=\"<%= currentTo %>\" />\n" +

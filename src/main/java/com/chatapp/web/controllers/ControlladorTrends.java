@@ -6,8 +6,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class ControlladorTrends {
 
     @Autowired
@@ -15,10 +16,8 @@ public class ControlladorTrends {
 
     @GetMapping("/trend")
     public String listTrends(Model model, @RequestParam("currentTo") String destino) {
-
         model.addAttribute("trends", servicioTrending.sorting());
-
-        return "redirect:/chat?&to=" + destino;
+        return servicioTrending.sorting().toString();
     }
 
 

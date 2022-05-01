@@ -57,12 +57,11 @@ public class ControladorWebSocket {
 
 
     public void enviarMensajeFichero(Mensaje mensaje) throws JSONException {
+        System.out.println("Fichero: " + mensaje);
         boolean destinatarioConectado = esUsuarioConectado(mensaje.getDestino());
         metricas.incrementMessages();
-        metricas.incrementBytes(mensaje.getContenido().getBytes().length);
-        if(esUsuarioConectado(mensaje.getDestino())) {
-            simpMessagingTemplate.convertAndSend("/topic/" + mensaje.getDestino(), mensaje);
-        }
+        //metricas.incrementBytes(mensaje.getContenido().getBytes().length);
+        simpMessagingTemplate.convertAndSend("/topic/" + mensaje.getDestino(), mensaje);
         servicioChat.guardarMensaje(mensaje, destinatarioConectado);
 
     }
