@@ -23,4 +23,11 @@ public class ControladorMvc {
     public String chat() {
         return "chat";
     }
+
+    @GetMapping("/admin")
+    public String admin() {
+        return "admin";
+    }
+
 }
+

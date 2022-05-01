@@ -42,7 +42,7 @@ public class ServicioUsuarios implements UserDetailsService {
                         .credentialsExpired(false)
                         .disabled(false)
                         .accountLocked(false)
-                        .roles("USUARIO")
+                        .roles(obtenerRole(nombre))
                         .build();
             }
         } catch (Throwable e) {
@@ -69,6 +69,14 @@ public class ServicioUsuarios implements UserDetailsService {
         parametros.put("miusuario", miUsuario);
         solicitud.put(PARAMETROS, parametros);
         return rabbit.enviaryRecibirMensaje(solicitud);
+    }
+
+    public String obtenerRole(String nombre) {
+        System.out.println("aver:" + nombre);
+        if (nombre.equals("admin")) {
+            return "ADMIN";
+        }
+        return "USUARIO";
     }
 
 }

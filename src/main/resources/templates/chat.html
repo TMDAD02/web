@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
 <head>
     <meta charset="utf-8">
     <!-- This file has been downloaded from Bootsnipp.com. Enjoy! -->
@@ -10,14 +12,14 @@
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
     <style type="text/css">
-        
+
         body{
     height:10px;
     position: fixed;
     top: 100px;
 }
 
-.chat_base{     
+.chat_base{
      overflow-y: scroll;
 }
 .col-md-2, .col-md-10{
@@ -136,6 +138,7 @@ img {
     background-color: #555;
 }
 
+
 .btn-group.dropup{
     position:fixed;
     left:0px;
@@ -158,14 +161,14 @@ img {
                         <h3 class="panel-title"><span class="glyphicon glyphicon-comment">
                                                 <p id="username"></p>
                                                </span> </h3>
-                    </div>                    
+                    </div>
                     <div class="col-md-4 col-xs-4" style="text-align: right;">
                         <a href="#"><span id="minim_chat_window" class="glyphicon glyphicon-minus icon_minim"></span></a>
                         <a href="#"><span class="glyphicon glyphicon-remove icon_close" data-id="chat_window_1"></span></a>
-                    </div>                    
+                    </div>
                 </div>
-                <div class="panel-body msg_container_base" id="chat_base">                    
-                </div>                
+                <div class="panel-body msg_container_base" id="chat_base">
+                </div>
                 <div class="panel-footer">
                     <div class="input-group">
                         <input id="btn-input" type="text" class="form-control input-sm chat_input" placeholder="Write your message here..." />
@@ -182,10 +185,10 @@ img {
                         -->
 
                     </div>
-                </div>                
+                </div>
             </div>
-                                
-        </div>            
+
+        </div>
     </div>
 
     <div class="row chat-window  col-md-2 col-xs-2" id="chat_window_1" >
@@ -195,19 +198,19 @@ img {
                         <h3 class="panel-title">
                             <span class="glyphicon glyphicon-comment">
                              <p id="username"> Usuarios</p> </span> </h3>
-                    </div>                      
-                 </div>   
-                 <div class="panel-body msg_container_base"  >        
-                   
-                        <div class="col-xs-30 col-md-20" style="margin-top:10px;">     
-                            <div class="messages"  id="user_base" style="align:left;">   
-                            
-                            </div>  
-                        </div> 
-                   
-                    </div>                                       
-                </div>   
-                
+                    </div>
+                 </div>
+                 <div class="panel-body msg_container_base"  >
+
+                        <div class="col-xs-30 col-md-20" style="margin-top:10px;">
+                            <div class="messages"  id="user_base" style="align:left;">
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
     </div>
 
     <div class="row chat-window  col-md-4 col-xs-2" id="chat_window_1" >
@@ -252,26 +255,36 @@ img {
             </div>
         </div>
 
+
+
     </div>
 
-    
-    <!-- <div class="btn-group dropup">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-            <span class="glyphicon glyphicon-cog"></span>
-            <span class="sr-only">Toggle Dropdown</span>
-        </button>
-        <ul class="dropdown-menu" role="menu">
-            <li><a href="#" id="new_chat"><span class="glyphicon glyphicon-plus"></span> Novo</a></li>
-            <li><a href="#"><span class="glyphicon glyphicon-list"></span> Ver outras</a></li>
-            <li><a href="#"><span class="glyphicon glyphicon-remove"></span> Fechar Tudo</a></li>
-            <li class="divider"></li>
-            <li><a href="#"><span class="glyphicon glyphicon-eye-close"></span> Invisivel</a></li>
-        </ul>
+
+
+</div>
+
+
+<div sec:authorize="hasRole('ROLE_ADMIN')">
+    <hr>
+    <h4><p style="color:#008000";>Bienvenido, lovely admin <3</h4>
+
+    <div class="row chat-window  col-md-4 col-xs-2" id="chat_window_1" >
+        <div class="input-group">
+            <input id="btn-broadcast" type="text" class="form-control input-sm chat_input" placeholder="Broadcast your message here..." />
+            <span class="input-group-btn">
+                                <button class="btn btn-primary btn-sm" id="btn-broadcast" onclick="send_broadcast()">Send</button>
+                                </span>
+        </div>
     </div>
-    -->
+<br><br><br><br>
+<div id="trend_base"></div>
+
 </div>
-<div id="trend_base">
-</div>
+<br><br>
+<a href="https://chatapp.grafana.net" class="btn btn-primary">Go to Grafana</a>
+
+
+
 <script type="text/javascript">
 
 $('<audio id="chatAudio"><source src="../snd/notify.ogg" type="audio/ogg"><source src="../snd/notify.mp3" type="audio/mpeg"><source src="../snd/notify.wav" type="audio/wav"></audio>').appendTo('body');
@@ -512,7 +525,7 @@ function getCurrentTime() {
 
 
 function showConnected() {
-    var TEXT_TEMPLATE = '<h4><p style="color:#008000";>Conectado: <%= myUsername %></p></h4>'
+    var TEXT_TEMPLATE = '<h4><p style="color:#008000";>Conectado: <%= myUsername %></h4>'
     var compiledText = _.template(TEXT_TEMPLATE)
     texto = compiledText({'username': myUsername});
     $("#connection-text").append(texto);
@@ -545,13 +558,20 @@ $( "#btn-input" ).keypress(function( event ) {
     if ( event.which == 13 ) {
         event.preventDefault();
         send_chat();
-    }    
+    }
 });
 
 function send_chat(){
     msg=$("#btn-input").val();
     send_message(msg);
-    bajalo(); 
+    bajalo();
+    $("#btn-input").val("");
+    $("#btn-input").focus();
+}
+
+function send_broadcast(){
+    msg = $("#btn-input").val();
+    // Implementar aquí el envío broadcast
     $("#btn-input").val("");
     $("#btn-input").focus();
 }
@@ -614,7 +634,7 @@ function send_file(){
 function bajalo(){
     var wtf    = $("#chat_base");
      var height = wtf[0].scrollHeight;
-     wtf.scrollTop(height);    
+     wtf.scrollTop(height);
      //get_users();
 }
 
