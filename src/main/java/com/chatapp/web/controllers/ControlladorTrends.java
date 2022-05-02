@@ -15,8 +15,7 @@ public class ControlladorTrends {
     public ServicioTrending servicioTrending;
 
     @GetMapping("/trend")
-    public String listTrends(Model model, @RequestParam("currentTo") String destino) {
-        model.addAttribute("trends", servicioTrending.sorting());
+    public String listTrends() {
         return servicioTrending.sorting().toString();
     }
 

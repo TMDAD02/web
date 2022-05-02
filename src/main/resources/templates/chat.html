@@ -277,7 +277,11 @@ img {
         </div>
     </div>
 <br><br><br><br>
-<div id="trend_base"></div>
+    <div>
+        <form method="GET" action="/trend">
+            <input class="btn btn-primary" type="submit" value="Trend"/>
+        </form>
+    </div>
 
 </div>
 <br><br>
@@ -378,7 +382,7 @@ getGroups()
 getUnreadMessages()
 getMessages()
 setUploadButton()
-getTrend()
+//getTrend()
 
 function getMyUser() {
     url = "/miusuario"
@@ -461,7 +465,7 @@ function setUploadButton() {
     var compiledUploadTemplate = _.template(uploadTemplate);
     $("#user_upload").html(compiledUploadTemplate({'currentTo': currentTo}));
 }
-
+/*
 function getTrend() {
     trendTemplate = "<form method=\"GET\" action=\"/trend\" >\n" +
         "                            <table>\n" +
@@ -469,7 +473,7 @@ function getTrend() {
         "                                    <input type=\"hidden\" name=\"currentTo\" value=\"<%= currentTo %>\" />\n" +
         "                                    <td><ul>\n" +
         "                                           <li th:each=\"trend : ${trends}\">\n" +
-        "                                               <a th:href=\"${trend}\" th:text=\"${trend}\" />\n" +
+        "                                               <p th:text=\"${trend}\" />\n" +
         "                                           </li>\n" +
         "                                   </ul></td>\n" +
         "                                </tr>\n" +
@@ -477,7 +481,7 @@ function getTrend() {
         "                        </form>"
     var compiledTrendTemplate = _.template(trendTemplate);
     $("#trend_base").html(compiledTrendTemplate({'currentTo': currentTo}));
-}
+}*/
 
 function getMessages() {
     url = "/mensajes?destinatario="+currentTo;

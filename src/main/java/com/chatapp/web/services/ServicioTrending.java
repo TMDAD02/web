@@ -48,7 +48,6 @@ public class ServicioTrending {
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
             String line;
-            int i = 0;
             while ((line = br.readLine()) != null) {
                 list.add(line.toLowerCase());
             }
