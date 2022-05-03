@@ -367,6 +367,9 @@ $("#username").text(currentTo);
         stompClient.subscribe('/topic/'+myUsername, function (message) {
             handleNewMessage(message)
         });
+        stompClient.subscribe('/topic/'+"anuypubli", function (message) {
+            handleAnuncioMessage(message)
+        });
     }, function (frame) {
         console.log("Error Frame: " + frame);
         if (frame.indexOf("Whoops! Lost connection") >= 0){
@@ -403,6 +406,14 @@ function handleNewMessage(message) {
         $("#chat_base").append(mensaje);
     } else {
         alert("¡¡NUEVO MENSAJE!! (" + chatMessage.fuente + "): " + chatMessage.contenido)
+    }
+}
+function handleAnuncioMessage(message) {
+    var chatMessage = JSON.parse(message.body);
+    if (chatMessage.fuente != myUsername) { // No mostrar el mensaje nuevo si la fuente soy yo!
+
+        alert("¡¡Anuncios/Publicidad de interés y publicidad del sistema!! : " + chatMessage.contenido)
+
     }
 }
 //
@@ -577,10 +588,11 @@ function send_chat(){
 }
 
 function send_broadcast(){
-    msg = $("#btn-input").val();
+    msg = $("#btn-broadcast").val();
+    send_msg_broadcast(msg);
     // Implementar aquí el envío broadcast
-    $("#btn-input").val("");
-    $("#btn-input").focus();
+    $("#btn-broadcast").val("");
+    $("#btn-broadcast").focus();
 }
 
 function create_group(){
@@ -627,6 +639,18 @@ function send_message(msg) {
         mensaje = compiledSending({msg:msg,usr:myUsername,datetim:getCurrentTime(),avat:"https://muratselek.com.tr/wp-content/uploads/2019/01/yorum-icon-avatar-men-768x768.png"});
 
         $("#chat_base").append(mensaje);
+    }
+}
+
+function send_msg_broadcast(msg) {
+    var compiledSending = _.template(SENDING_TEMPLATE)
+
+    if (msg.length < 500) {
+        var jsonString =  JSON.stringify({'contenido': msg, 'fuente': myUsername, 'destino':"anuypubli"});
+        stompClient.send("/app/chat/" + "anuypubli", {'username': myUsername}, jsonString);
+        //mensaje = compiledSending({msg:msg,usr:myUsername,datetim:getCurrentTime(),avat:"https://muratselek.com.tr/wp-content/uploads/2019/01/yorum-icon-avatar-men-768x768.png"});
+
+        //$("#chat_base").append(mensaje);
     }
 }
 

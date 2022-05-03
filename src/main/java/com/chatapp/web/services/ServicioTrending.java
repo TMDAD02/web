@@ -44,7 +44,7 @@ public class ServicioTrending {
 
     public void init() {
         List<String> list = new ArrayList<>(62500);
-        File file = new File("Sustantivos.txt");
+        File file = new File("sustantivos.txt");
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
             String line;
