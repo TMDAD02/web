@@ -150,7 +150,7 @@ img {
     <script src="../js/jquery.titlealert.min.js"></script>
     <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
 </head>
-<body >
+<body>
 <div class="conexion-texto" id="connection-text"></div>
 <div class="container">
     <div class="row chat-window col-xs-5 col-md-20" id="chat_window_1" style="margin-left:100px;">
@@ -284,10 +284,12 @@ img {
         </form>
     </div>
 
+    <a href="https://chatapp.grafana.net" class="btn btn-primary">Go to Grafana</a>
+
 </div>
 <br><br>
-<a href="https://chatapp.grafana.net" class="btn btn-primary">Go to Grafana</a>
 
+</body>
 
 
 <script type="text/javascript">
@@ -358,7 +360,7 @@ $("#username").text(currentTo);
         $( "#chat_window_1" ).remove();
     });
 
-    stompClient = Stomp.client("ws://localhost:8888/ws");
+    stompClient = Stomp.client("ws://ge.danielhuici.ml:8888/ws");
     stompClient.connect({"username": myUsername}, function (frame) {
         showConnected()
         reconnectAttempts = 0;
