@@ -382,7 +382,7 @@ $("#username").text(currentTo);
         $( "#chat_window_1" ).remove();
     });
 
-    stompClient = Stomp.client("ws://localhost:8888/ws");
+    stompClient = Stomp.client("ws://ge.danielhuici.ml:8888/ws");
     stompClient.connect({"username": myUsername}, function (frame) {
         showConnected()
         reconnectAttempts = 0;
