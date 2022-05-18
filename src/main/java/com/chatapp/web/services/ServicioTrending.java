@@ -14,7 +14,8 @@ public class ServicioTrending {
 
     private Map<String, Integer> words = new HashMap<>();
     private String[] sustantivos;
-    private List<String> trends;
+    //private static List<String> trends;
+    private Map<String, Integer> trends;
 
     public void update(String contenido) {
         StringTokenizer st = new StringTokenizer(contenido, " ");
@@ -33,12 +34,11 @@ public class ServicioTrending {
         }
     }
 
-    public List<String> sorting() {
+    public Map<String, Integer> sorting() {
         trends = words.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .map(e -> e.getKey())
-                .collect(Collectors.toList());
-        //trends.forEach(System.out::println);
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        //trends.forEach((k,v)->System.out.println(k+"="+v));
         return trends;
     }
 
