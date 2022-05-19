@@ -18,7 +18,6 @@ public class WebApplication {
 	@Bean
 	CommandLineRunner init(ServicioAlmacenamiento storageService, ServicioTrending servicioTrending) {
 		return (args) -> {
-			//storageService.deleteAll();
 			storageService.init();
 			servicioTrending.init();
 		};

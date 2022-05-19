@@ -25,13 +25,16 @@ public class ServicioAlmacenamientoFS implements ServicioAlmacenamiento {
 	private Metricas metricas;
 
 	@Override
-	public String store(MultipartFile file, String sender) {
+	public String store(MultipartFile file, String sender, String receiver) {
 		try {
-			String generatedFilename = generateFilename(sender, file.getOriginalFilename());
-			Path destinationFile = this.rootLocation.resolve(generatedFilename)
+			Path fileLocation = Paths.get(LOCAL_PATH, sender, receiver);
+			Files.createDirectories(fileLocation);
+
+			String generatedFilename = generateFilename(file.getOriginalFilename());
+			Path destinationFile = fileLocation.resolve(generatedFilename)
 					.normalize().toAbsolutePath();
 
-			if (file.isEmpty() || !destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
+			if (file.isEmpty() || !destinationFile.getParent().equals(fileLocation.toAbsolutePath())) {
 				throw new IOException("Failed to store empty file.");
 			}
 			//metricas.incrementBytes(file.getBytes().length);
@@ -80,8 +83,8 @@ public class ServicioAlmacenamientoFS implements ServicioAlmacenamiento {
 		}
 	}
 
-	private String generateFilename(String sender, String filename) {
-		return sender + "-" + System.currentTimeMillis() + getFileExtension(filename);
+	private String generateFilename(String filename) {
+		return getFileName(filename) + "-" + System.currentTimeMillis() + getFileExtension(filename);
 	}
 
 	private String getFileExtension(String filename) {
@@ -90,5 +93,13 @@ public class ServicioAlmacenamientoFS implements ServicioAlmacenamiento {
 			return "";
 		}
 		return filename.substring(lastIndexOf);
+	}
+
+	private String getFileName(String filename){
+		int lastIndexOf = filename.lastIndexOf(".");
+		if (lastIndexOf == -1) {
+			return filename;
+		}
+		return filename.substring(0,lastIndexOf);
 	}
 }

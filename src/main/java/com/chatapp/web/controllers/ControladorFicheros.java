@@ -35,7 +35,7 @@ public class ControladorFicheros {
 
     @GetMapping(PUBLIC_FILES_PATH + "/{filename:.+}")
     @ResponseBody
-    public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
+    public ResponseEntity<Resource> serveFile(@PathVariable String filename, @AuthenticationPrincipal final UserDetails ud) {
         Resource file = storageService.loadAsResource(filename);
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
@@ -46,7 +46,7 @@ public class ControladorFicheros {
                                    @RequestParam("currentTo") String destino, @AuthenticationPrincipal final UserDetails ud) throws JSONException {
 
         System.out.println("Fichero subido por : " + ud.getUsername() + " para " + destino);
-        String filename = storageService.store(file, ud.getUsername());
+        String filename = storageService.store(file, ud.getUsername(), destino);
         if(filename != null) {
             controladorWebSocket.enviarMensajeFichero(new Mensaje(ud.getUsername(), "<a href=" + PUBLIC_FILES_PATH + "/" + filename + " >" + filename + "</a>", destino));
         }
