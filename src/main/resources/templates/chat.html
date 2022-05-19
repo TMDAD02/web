@@ -22,6 +22,9 @@
 .chat_base{
      overflow-y: scroll;
 }
+.chat_base_anuypubli{
+    overflow-y: scroll;
+}
 .col-md-2, .col-md-10{
     padding:0;
 }
@@ -260,6 +263,25 @@ img {
 
     </div>
 
+    <div class="row chat-window col-xs-5 col-md-20" id="chat_window_1" style="margin-left:100px;">
+        <div class="col-xs-20 col-md-20">
+            <div class="panel panel-default">
+                <div class="panel-heading top-bar">
+                    <div class="col-md-8 col-xs-8">
+                        <h3 class="panel-title"><span class="glyphicon glyphicon-comment">
+                                                <p id="username"> ANUNCIOS Y PUBLICIDAD</p></span> </h3>
+                    </div>
+                    <div class="col-md-4 col-xs-4" style="text-align: right;">
+                        <a href="#"><span id="minim_chat_window" class="glyphicon glyphicon-minus icon_minim"></span></a>
+                        <a href="#"><span class="glyphicon glyphicon-remove icon_close" data-id="chat_window_1"></span></a>
+                    </div>
+                </div>
+                <div class="panel-body msg_container_base" id="chat_base_anuypubli">
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 
 </div>
@@ -387,7 +409,9 @@ getUsers()
 getGroups()
 getUnreadMessages()
 getMessages()
+getAnuyPubli()
 setUploadButton()
+
 
 function getMyUser() {
     url = "/miusuario"
@@ -462,6 +486,10 @@ function getGroups() {
                 handleGroupMessage(group, message)
             });
         });
+
+        //var msg = compiledUsuarioTemplate({'username': myUsername, usr:"anuypubli"});
+        //todos+=msg
+
         $("#group_base").html(todos);
     });
 }
@@ -495,6 +523,21 @@ function getMessages() {
                 mensaje = compiledReceiving({msg:mensaje.contenido,usr:mensaje.fuente,datetim:mensaje.fecha,avat:"https://muratselek.com.tr/wp-content/uploads/2019/01/yorum-icon-avatar-men-768x768.png"});
                 $("#chat_base").append(mensaje);
             }
+        });
+    });
+}
+
+function getAnuyPubli() {
+    url = "/mensajes?destinatario="+"anuypubli";
+    $.getJSON(url, function(mensajes) {
+        console.log(mensajes);
+        var listaMensajes = mensajes.listaMensajes;
+        listaMensajes.forEach(function(mensaje) {
+
+            var compiledReceiving = _.template(RECEIVING_TEMPLATE)
+            mensaje = compiledReceiving({msg:mensaje.contenido,usr:mensaje.fuente,datetim:mensaje.fecha,avat:"https://muratselek.com.tr/wp-content/uploads/2019/01/yorum-icon-avatar-men-768x768.png"});
+            $("#chat_base_anuypubli").append(mensaje);
+
         });
     });
 }
@@ -573,6 +616,7 @@ function send_chat(){
 function send_broadcast(){
     msg = $("#btn-broadcast").val();
     send_msg_broadcast(msg);
+    bajalo_anuypubli();
     // Implementar aquí el envío broadcast
     $("#btn-broadcast").val("");
     $("#btn-broadcast").focus();
@@ -630,10 +674,10 @@ function send_msg_broadcast(msg) {
 
     if (msg.length < 500) {
         var jsonString =  JSON.stringify({'contenido': msg, 'fuente': myUsername, 'destino':"anuypubli"});
-        stompClient.send("/app/chat/" + "anuypubli", {'username': myUsername}, jsonString);
-        //mensaje = compiledSending({msg:msg,usr:myUsername,datetim:getCurrentTime(),avat:"https://muratselek.com.tr/wp-content/uploads/2019/01/yorum-icon-avatar-men-768x768.png"});
+        stompClient.send("/app/chat/" + "anuypubli", {'username': "anuypubli"}, jsonString);
+        mensaje = compiledSending({msg:msg,usr:myUsername,datetim:getCurrentTime(),avat:"https://muratselek.com.tr/wp-content/uploads/2019/01/yorum-icon-avatar-men-768x768.png"});
 
-        //$("#chat_base").append(mensaje);
+        $("#chat_base_anuypubli").append(mensaje);
     }
 }
 
@@ -650,6 +694,12 @@ function bajalo(){
      var height = wtf[0].scrollHeight;
      wtf.scrollTop(height);
      //get_users();
+}
+function bajalo_anuypubli(){
+    var wtf    = $("#chat_base_anuypubli");
+    var height = wtf[0].scrollHeight;
+    wtf.scrollTop(height);
+    //get_users();
 }
 
 
