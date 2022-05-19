@@ -26,6 +26,7 @@ public class Rabbit {
 
 
     public JSONObject enviaryRecibirMensaje(JSONObject mensaje) throws JSONException {
+        System.out.println(mensaje);
         String respuesta = String.valueOf(rabbitTemplate.convertSendAndReceive(Rabbit.COLA_PETICIONES, mensaje.toString()));
         return new JSONObject(respuesta);
     }
