@@ -35,13 +35,13 @@ public class WebSocketMessageBrokerConfig implements WebSocketMessageBrokerConfi
         //config.enableSimpleBroker("/topic");
 
         config.enableStompBrokerRelay("/topic")
-                .setRelayHost("rat-01.rmq2.cloudamqp.com")
+                .setRelayHost("rat.rmq2.cloudamqp.com")
                 .setRelayPort(61613)
-                .setClientLogin("mudxwkic")
-                .setClientPasscode("RanoXwGQ-JCPHuh8JRSVWuerlj6KtOv3")
-                .setSystemLogin("mudxwkic")
-                .setSystemPasscode("RanoXwGQ-JCPHuh8JRSVWuerlj6KtOv3")
-                .setVirtualHost("mudxwkic");
+                .setClientLogin("lptcaapz")
+                .setClientPasscode("PNtCD-H_P4oceSI1n7iyza-RUDyMupZP")
+                .setSystemLogin("lptcaapz")
+                .setSystemPasscode("PNtCD-H_P4oceSI1n7iyza-RUDyMupZP")
+                .setVirtualHost("lptcaapz");
 
 
     }

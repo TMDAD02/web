@@ -64,7 +64,6 @@ public class ServicioGrupos implements UserDetailsService{
     }
 
     public JSONObject obtenerTodosGrupos(String miUsuario) throws JSONException {
-        //System.out.println("hemos solicitado obtener gruposssssssss!!!!!!!!!!!!!!!! " );
         JSONObject solicitud = new JSONObject();
         solicitud.put(NOMBRE_COMANDO, "OBTENER_TODOS_GRUPOS");
 

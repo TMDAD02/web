@@ -71,6 +71,14 @@ public class ServicioUsuarios implements UserDetailsService {
         return rabbit.enviaryRecibirMensaje(solicitud);
     }
 
+    public boolean existeUsuario(String usuario) throws Throwable {
+        JSONObject respuesta = autenticarUsuario(usuario);
+        if (respuesta.get("RESULTADO_PETICION").equals("USUARIO_EXISTE")) {
+            return true;
+        }
+        return false;
+    }
+
     public String obtenerRole(String nombre) {
         System.out.println("aver:" + nombre);
         if (nombre.equals("admin")) {
