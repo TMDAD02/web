@@ -21,17 +21,33 @@ Feature: Salas de chat permanentes para tener un registro de conversaciones pasa
     When Usuario introduce su nickname 'maria'
     Then Usuario es conectado con éxito
     And Grupo 'grupoPruebas' aparece en la lista de grupos
+    And Cerrar el navegador
+    Given Abrir el navegador y entrar en la aplicación
+    Then Login es mostrado
+    When Usuario introduce su nickname 'paco'
+    Then Usuario es conectado con éxito
+    And Grupo 'grupoPruebas' aparece en la lista de grupos
+    And Cerrar el navegador
 
   Scenario: Usuario sin privilegios intenta añadir participante
-    And Usuario añade a 'omar' al grupo 'grupoPruebas'
+    Given Abrir el navegador y entrar en la aplicación
+    Then Login es mostrado
+    When Usuario introduce su nickname 'paco'
+    Then Usuario es conectado con éxito
+    When Usuario añade a 'omar' al grupo 'grupoPruebas'
     And Cerrar el navegador
     When Abrir el navegador y entrar en la aplicación
     Then Login es mostrado
     When Usuario introduce su nickname 'omar'
     Then Usuario es conectado con éxito
     And Grupo 'grupoPruebas' no aparece en la lista de grupos
+    And Cerrar el navegador
 
   Scenario: Usuario sin privilegios intenta eliminar participante
+    Given Abrir el navegador y entrar en la aplicación
+    Then Login es mostrado
+    When Usuario introduce su nickname 'paco'
+    Then Usuario es conectado con éxito
     When Usuario elimina a 'mario' del grupo 'grupoPruebas'
     And Cerrar el navegador
     When Abrir el navegador y entrar en la aplicación
@@ -39,9 +55,14 @@ Feature: Salas de chat permanentes para tener un registro de conversaciones pasa
     When Usuario introduce su nickname 'mario'
     Then Usuario es conectado con éxito
     And Grupo 'grupoPruebas' aparece en la lista de grupos
+    And Cerrar el navegador
 
 
   Scenario: Usuario sin privilegios intenta eliminar grupo
+    Given Abrir el navegador y entrar en la aplicación
+    Then Login es mostrado
+    When Usuario introduce su nickname 'paco'
+    Then Usuario es conectado con éxito
     When Usuario elimina grupo 'grupoPruebas'
     And Cerrar el navegador
     Given Abrir el navegador y entrar en la aplicación
@@ -67,13 +88,14 @@ Feature: Salas de chat permanentes para tener un registro de conversaciones pasa
     Then Usuario es conectado con éxito
     When Usuario entra a grupo 'grupoPruebas'
     And Usuario introduce un mensaje 'Hola grupo!, saludos desde Selenium'
+    And Usuario envia el mensaje
     And Cerrar el navegador
     And Abrir el navegador y entrar en la aplicación
     Then Login es mostrado
     When Usuario introduce su nickname 'mario'
     Then Usuario es conectado con éxito
     When Usuario entra a grupo 'grupoPruebas'
-    And Mensaje 'Hola grupo!, saludos desde Selenium' es enviado con exito
+    And El mensaje 'Hola grupo!, saludos desde Selenium' es recibido con éxito en grupo
     And Cerrar el navegador
 
   Scenario: Usuario intenta enviar mensaje con más de 500 caracteres

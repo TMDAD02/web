@@ -8,6 +8,9 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class Rabbit {
     public static final String COLA_PETICIONES = "peticiones";
@@ -26,8 +29,11 @@ public class Rabbit {
 
 
     public JSONObject enviaryRecibirMensaje(JSONObject mensaje) throws JSONException {
-        System.out.println(mensaje);
+        long t0 = System.currentTimeMillis();
         String respuesta = String.valueOf(rabbitTemplate.convertSendAndReceive(Rabbit.COLA_PETICIONES, mensaje.toString()));
+        long t1 = System.currentTimeMillis();
+        long tiempo = t1-t0;
+        System.out.println("Tiempo de respuesta APP/Rabbit: " + tiempo);
         return new JSONObject(respuesta);
     }
 

@@ -40,6 +40,16 @@ public class AllStepsDefinition {
         }
     }
 
+    @Given("^Abrir dos navegadores y entrar en la aplicación$")
+    public void abrirDosNavegadoresEntrarAplicacion() throws Throwable {
+        simultaneos = new LinkedList<>();
+        for (int i = 0; i < 2; i++) {
+            WebDriver drv = new ChromeDriver();
+            drv.get("http://ge.danielhuici.ml:8888/");
+            simultaneos.add(drv);
+        }
+    }
+
     @And("^Login es mostrado$")
     public void loginEsMostrado() throws Throwable {
         String ingresarString = driver.findElement(By.className("modal-dialog")).getText();
@@ -95,16 +105,16 @@ public class AllStepsDefinition {
 
     @When("^Usuario introduce un mensaje '(.*)'$")
     public void usuarioIntroduceMensaje(String mensaje) throws Throwable {
-        Thread.sleep(5000);
-        driver.findElement(By.xpath("//input[@placeholder='Broadcast your message here...']")).sendKeys(mensaje);
-        driver.findElements(By.id("btn-chat")).get(5).click();
+        Thread.sleep(3000);
+        driver.findElement(By.xpath("//input[@placeholder='Write your message here...']")).sendKeys(mensaje);
+
     }
 
-    @When("^Usuario introduce un anuncio '(.*)'$")
-    public void usuarioIntroduceAnuncio(String mensaje) throws Throwable {
-        Thread.sleep(5000);
-        driver.findElement(By.xpath("//input[@placeholder='Write your message here...']")).sendKeys(mensaje);
-        //driver.findElement(By.className("form-control input-sm chat_input")).sendKeys(mensaje);
+    @When("Usuario introduce un anuncio {string} en sesion {int}")
+    public void usuarioIntroduceAnuncio(String mensaje, int sesion) throws Throwable {
+        Thread.sleep(3500);
+        simultaneos.get(sesion).findElement(By.xpath("//input[@placeholder='Broadcast your message here...']")).sendKeys(mensaje);
+        simultaneos.get(sesion).findElement(By.id("btn-broadcast")).click();
     }
 
     @When("Usuario introduce un mensaje {string} en sesion {int}")
@@ -129,6 +139,7 @@ public class AllStepsDefinition {
 
     @Then("^Mensaje '(.*)' es enviado con exito$")
     public void mensajeEsEnviadoConExito(String mensaje) throws Throwable {
+        Thread.sleep(2000);
         List<WebElement> mensajesEnviados = driver.findElements(By.className("msg_receive"));
         assertTrue(mensajesEnviados.get(mensajesEnviados.size() - 1).getText().contains(mensaje));
     }
@@ -157,11 +168,38 @@ public class AllStepsDefinition {
         }
     }
 
+    @Then("Mensaje {string} es recibido por alerta en sesión {int}")
+    public void mensajeEsRecibidoPorAlertaSesion(String mensaje, int sesion) throws Throwable {
+        Thread.sleep(3000);
+        try {
+            assertTrue(simultaneos.get(sesion).switchTo().alert().getText().contains(mensaje));
+            simultaneos.get(sesion).switchTo().alert().accept();
+        } catch (Exception e){
+            assertTrue(false);
+        }
+    }
+
     @Then("El mensaje {string} es recibido con éxito")
     public void mensajesSonRecibidosOk(String mensaje) throws InterruptedException {
         Thread.sleep(3000);
        // System.out.println(simultaneos.get(0).getPageSource());
+        List<WebElement> mensajesEnviados = driver.findElements(By.className("msg_sent"));
+        assertTrue(mensajesEnviados.get(mensajesEnviados.size() - 1).getText().contains(mensaje));
+    }
+
+    @Then("El anuncio {string} es persistente en el sistema")
+    public void anuncioEsPersistente(String mensaje) throws InterruptedException {
+        Thread.sleep(3000);
+        // System.out.println(simultaneos.get(0).getPageSource());
         List<WebElement> mensajesEnviados = simultaneos.get(0).findElements(By.className("msg_sent"));
+        assertTrue(mensajesEnviados.get(mensajesEnviados.size() - 1).getText().contains(mensaje));
+    }
+
+    @Then("El mensaje {string} es recibido con éxito en grupo")
+    public void mensajesSonRecibidosOkGrupo(String mensaje) throws InterruptedException {
+        Thread.sleep(3000);
+        // System.out.println(simultaneos.get(0).getPageSource());
+        List<WebElement> mensajesEnviados = driver.findElements(By.className("msg_sent"));
         assertTrue(mensajesEnviados.get(mensajesEnviados.size() - 1).getText().contains(mensaje));
     }
 
@@ -204,7 +242,7 @@ public class AllStepsDefinition {
 
     @When("Usuario elimina grupo {string}")
     public void usuarioEliminaGrupoGrupoPruebas(String grupo) {
-        driver.findElement(By.xpath("//input[@placeholder='Insert group name to remove...']")).sendKeys(grupo);
+        driver.findElement(By.xpath("//input[@placeholder='Insert group name to remove..']")).sendKeys(grupo);
         driver.findElements(By.id("btn-chat")).get(2).click();
     }
 
@@ -221,8 +259,12 @@ public class AllStepsDefinition {
 
     @Then("Grupo {string} no aparece en la lista de grupos")
     public void grupoNoApareceEnLaListaDeGrupos(String grupo) {
-        String nombregrupo = driver.findElement(By.linkText(grupo)).getText();
-        assertNotEquals(nombregrupo, grupo);
+        try {
+            String nombregrupo = driver.findElement(By.linkText(grupo)).getText();
+            assert(false);
+        } catch (Exception e) {
+            assert(true);
+        }
     }
 
     @When("Usuario añade a {string} al grupo {string}")
@@ -242,12 +284,17 @@ public class AllStepsDefinition {
 
     @When("Accede sin privilegios al grupo {string}")
     public void accedeSinPrivilegiosAlGrupoGrupoPruebas(String grupo) {
-        driver.get("ge.danielhuici.ml/chat?to=" + grupo);
+        driver.get("http://ge.danielhuici.ml:8888/chat?to=" + grupo);
+    }
+
+    @And("Usuario consulta el trending")
+    public void usuarioConsultaElTrending() {
+        driver.get("http://ge.danielhuici.ml:8888/trend");
     }
 
     @Then("Recibe error sin privilegios")
-    public void recibeErrorSinPrivilegios(String grupo) {
-        assertTrue(driver.getPageSource().contains("Error Page"));
+    public void recibeErrorSinPrivilegios() {
+        assertTrue(driver.getPageSource().contains("401"));
     }
 
     @Then("^Cerrar el navegador$")

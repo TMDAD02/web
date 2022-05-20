@@ -13,11 +13,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 
 import static com.chatapp.web.controllers.ControladorGrupos.PARAMETROS_NOMBRE;
 import static com.chatapp.web.controllers.ControladorGrupos.RESULTADO_RESPUESTA_NOMBRE;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Controller
 public class ControladorMvc {
@@ -40,23 +43,17 @@ public class ControladorMvc {
 
     @GetMapping("/chat")
     public String chat(@RequestParam String to, @AuthenticationPrincipal UserDetails userDetails) throws Throwable {
-        try {
-            if(servicioUsuarios.existeUsuario(to)) {
+        if(servicioUsuarios.existeUsuario(to)) {
+            return "chat";
+        } else {
+            JSONObject respuesta = servicioGrupos.obtenerTodosGrupos(userDetails.getUsername());
+            System.out.println(respuesta);
+            JSONArray grupos = ((JSONObject)  respuesta.get(PARAMETROS_NOMBRE)).getJSONArray("listaGrupos");
+            if (grupos.toString().contains(to)) {
                 return "chat";
-            } else {
-                JSONObject respuesta = servicioGrupos.obtenerTodosGrupos(userDetails.getUsername());
-                if(respuesta.getString(RESULTADO_RESPUESTA_NOMBRE).equals("OBTENER_TODOS_GRUPOS_CORRECTO")) {
-                    JSONArray grupos = respuesta.getJSONObject(PARAMETROS_NOMBRE).getJSONArray("listaGrupos");
-                    for (int i = 0; i < grupos.length(); i++) {
-                        if (grupos.get(i).equals(to)) {
-                            return "chat";
-                        }
-                    }
-                }
             }
-            return "error";
-        } catch (Exception e) {
-            return "error";
+
+            throw new ResponseStatusException(UNAUTHORIZED, "Unable to find resource");
         }
     }
 
