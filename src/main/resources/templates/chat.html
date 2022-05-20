@@ -346,6 +346,7 @@ var RECEIVING_TEMPLATE = "<div class=\"row msg_container base_sent\"> \
 var myUsername = getMyUser();
 var currentTo = getUrlParameter('to');
 var stompClient = null;
+var isUser = false ;
 
 setInterval(function () {bajalo()}, 5000);
 
@@ -408,7 +409,10 @@ $("#username").text(currentTo);
 getUsers()
 getGroups()
 getUnreadMessages()
-getMessages()
+
+//alert(isUser+"checkkkk")
+
+
 getAnuyPubli()
 setUploadButton()
 
@@ -462,12 +466,23 @@ function getUsers() {
         console.log(data);
         var listaUsuarios = data.listaUsuarios;
         listaUsuarios.forEach(function(connectedUser) {
+            //alert(connectedUser+" "+currentTo)
+            if( currentTo == connectedUser ){ isUser = true;  }
             console.log(connectedUser);
             var msg = compiledUsuarioTemplate({'username': myUsername, usr:connectedUser});
             todos += msg
+            if(listaUsuarios[listaUsuarios.length-1] == connectedUser){
+                alert(isUser+"checkkk")
+                if(isUser){
+                    getMessagesUsuario()
+                }else{
+                    getMessagesGrupo()
+                }
+            }
         });
         $("#user_base").html(todos);
     });
+
 }
 
 function getGroups() {
@@ -508,7 +523,7 @@ function setUploadButton() {
 }
 
 
-function getMessages() {
+/*function getMessages() {
     url = "/mensajes?destinatario="+currentTo;
     $.getJSON(url, function(mensajes) {
         console.log(mensajes);
@@ -523,6 +538,37 @@ function getMessages() {
                 mensaje = compiledReceiving({msg:mensaje.contenido,usr:mensaje.fuente,datetim:mensaje.fecha,avat:"https://muratselek.com.tr/wp-content/uploads/2019/01/yorum-icon-avatar-men-768x768.png"});
                 $("#chat_base").append(mensaje);
             }
+        });
+    });
+}*/
+function getMessagesUsuario() {
+    url = "/mensajesUsuario?destinatario="+currentTo;
+    $.getJSON(url, function(mensajes) {
+        console.log(mensajes);
+        var listaMensajes = mensajes.listaMensajes;
+        listaMensajes.forEach(function(mensaje) {
+            if(mensaje.fuente == myUsername) {
+                var compiledSending = _.template(SENDING_TEMPLATE)
+                mensaje = compiledSending({msg:mensaje.contenido,usr:mensaje.fuente,datetim:mensaje.fecha,avat:"https://muratselek.com.tr/wp-content/uploads/2019/01/yorum-icon-avatar-men-768x768.png"});
+                $("#chat_base").append(mensaje);
+            } else {
+                var compiledReceiving = _.template(RECEIVING_TEMPLATE)
+                mensaje = compiledReceiving({msg:mensaje.contenido,usr:mensaje.fuente,datetim:mensaje.fecha,avat:"https://muratselek.com.tr/wp-content/uploads/2019/01/yorum-icon-avatar-men-768x768.png"});
+                $("#chat_base").append(mensaje);
+            }
+        });
+    });
+}
+
+function getMessagesGrupo() {
+    url = "/mensajesGrupo?destinatario="+currentTo;
+    $.getJSON(url, function(mensajes) {
+        console.log(mensajes);
+        var listaMensajes = mensajes.listaMensajes;
+        listaMensajes.forEach(function(mensaje) {
+            var compiledReceiving = _.template(RECEIVING_TEMPLATE)
+            mensaje = compiledReceiving({msg:mensaje.contenido,usr:mensaje.fuente,datetim:mensaje.fecha,avat:"https://muratselek.com.tr/wp-content/uploads/2019/01/yorum-icon-avatar-men-768x768.png"});
+            $("#chat_base").append(mensaje);
         });
     });
 }
@@ -631,7 +677,11 @@ function create_group(){
 
     $("#btn-input-create").val("");
     $("#btn-input-create").focus();
-    window.location.reload();
+    //window.location.reload();
+    gruposTemplate = "<a href='chat?&to=<%= usr %>'> <%= usr %> </a><br>"
+    var compiledUsuarioTemplate = _.template(gruposTemplate);
+    var msg = compiledUsuarioTemplate({ usr:grupo});
+    $("#group_base").append(msg);
 }
 
 function remove_group(){

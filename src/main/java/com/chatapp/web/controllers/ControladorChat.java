@@ -26,12 +26,43 @@ public class ControladorChat {
     private AuthenticationManager authenticationManager;
 
 
-    @GetMapping(path = "/mensajes", produces = "application/json")
+    /*@GetMapping(path = "/mensajes", produces = "application/json")
     public ResponseEntity<?> obtenerMensajes(@RequestParam String destinatario) {
         try {
             UserDetails ud = (UserDetails) (SecurityContextHolder.getContext().getAuthentication()).getPrincipal();
             JSONObject respuesta = servicioChat.obtenerMensajes(ud.getUsername(), destinatario);
             if(respuesta.getString(RESULTADO_RESPUESTA_NOMBRE).equals("OBTENER_MENSAJES_CORRECTO")) {
+                JSONObject parametros = respuesta.getJSONObject(PARAMETROS_NOMBRE);
+                return new ResponseEntity<>(parametros.toString(), HttpStatus.OK);
+            }
+
+        } catch (JSONException e) {
+            return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
+    }*/
+
+    @GetMapping(path = "/mensajesUsuario", produces = "application/json")
+    public ResponseEntity<?> obtenerMensajesUsuario(@RequestParam String destinatario) {
+        try {
+            UserDetails ud = (UserDetails) (SecurityContextHolder.getContext().getAuthentication()).getPrincipal();
+            JSONObject respuesta = servicioChat.obtenerMensajesUsuarios(ud.getUsername(), destinatario);
+            if(respuesta.getString(RESULTADO_RESPUESTA_NOMBRE).equals("OBTENER_MENSAJES_USUARIOS_CORRECTO")) {
+                JSONObject parametros = respuesta.getJSONObject(PARAMETROS_NOMBRE);
+                return new ResponseEntity<>(parametros.toString(), HttpStatus.OK);
+            }
+
+        } catch (JSONException e) {
+            return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @GetMapping(path = "/mensajesGrupo", produces = "application/json")
+    public ResponseEntity<?> obtenerMensajesGrupo(@RequestParam String destinatario) {
+        try {
+            JSONObject respuesta = servicioChat.obtenerMensajesGrupos(destinatario);
+            if(respuesta.getString(RESULTADO_RESPUESTA_NOMBRE).equals("OBTENER_MENSAJES_GRUPOS_CORRECTO")) {
                 JSONObject parametros = respuesta.getJSONObject(PARAMETROS_NOMBRE);
                 return new ResponseEntity<>(parametros.toString(), HttpStatus.OK);
             }

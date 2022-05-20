@@ -35,12 +35,33 @@ public class ServicioChat {
         rabbit.enviaryRecibirMensaje(solicitud);
     }
 
-    public JSONObject obtenerMensajes(String fuente, String destinatario) throws JSONException {
+    /*public JSONObject obtenerMensajes(String fuente, String destinatario) throws JSONException {
         JSONObject solicitud = new JSONObject();
         solicitud.put(NOMBRE_COMANDO, "OBTENER_MENSAJES");
 
         JSONObject parametros = new JSONObject();
         parametros.put("fuente", fuente);
+        parametros.put("destino", destinatario);
+        solicitud.put(PARAMETROS, parametros);
+        return rabbit.enviaryRecibirMensaje(solicitud);
+    }*/
+
+    public JSONObject obtenerMensajesUsuarios(String fuente, String destinatario) throws JSONException {
+        JSONObject solicitud = new JSONObject();
+        solicitud.put(NOMBRE_COMANDO, "OBTENER_MENSAJES_USUARIOS");
+
+        JSONObject parametros = new JSONObject();
+        parametros.put("fuente", fuente);
+        parametros.put("destino", destinatario);
+        solicitud.put(PARAMETROS, parametros);
+        return rabbit.enviaryRecibirMensaje(solicitud);
+    }
+
+    public JSONObject obtenerMensajesGrupos( String destinatario) throws JSONException {
+        JSONObject solicitud = new JSONObject();
+        solicitud.put(NOMBRE_COMANDO, "OBTENER_MENSAJES_GRUPOS");
+
+        JSONObject parametros = new JSONObject();
         parametros.put("destino", destinatario);
         solicitud.put(PARAMETROS, parametros);
         return rabbit.enviaryRecibirMensaje(solicitud);
