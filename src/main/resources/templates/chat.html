@@ -409,10 +409,8 @@ $("#username").text(currentTo);
 getUsers()
 getGroups()
 getUnreadMessages()
-
-//alert(isUser+"checkkkk")
-
-
+getMessagesUsuario()
+getMessagesGrupo()
 getAnuyPubli()
 setUploadButton()
 
@@ -471,14 +469,14 @@ function getUsers() {
             console.log(connectedUser);
             var msg = compiledUsuarioTemplate({'username': myUsername, usr:connectedUser});
             todos += msg
-            if(listaUsuarios[listaUsuarios.length-1] == connectedUser){
+            /*if(listaUsuarios[listaUsuarios.length-1] == connectedUser){
                 alert(isUser+"checkkk")
                 if(isUser){
                     getMessagesUsuario()
                 }else{
                     getMessagesGrupo()
                 }
-            }
+            }*/
         });
         $("#user_base").html(todos);
     });
@@ -501,9 +499,6 @@ function getGroups() {
                 handleGroupMessage(group, message)
             });
         });
-
-        //var msg = compiledUsuarioTemplate({'username': myUsername, usr:"anuypubli"});
-        //todos+=msg
 
         $("#group_base").html(todos);
     });
@@ -574,7 +569,7 @@ function getMessagesGrupo() {
 }
 
 function getAnuyPubli() {
-    url = "/mensajes?destinatario="+"anuypubli";
+    url = "/mensajesGrupo?destinatario="+"anuypubli";
     $.getJSON(url, function(mensajes) {
         console.log(mensajes);
         var listaMensajes = mensajes.listaMensajes;
