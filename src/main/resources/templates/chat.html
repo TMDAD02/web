@@ -642,6 +642,8 @@ function remove_group(){
 
     $("#btn-input-remove").val("");
     $("#btn-input-remove").focus();
+    window.location.reload();
+
 }
 
 function add_user(){
@@ -655,6 +657,24 @@ function add_user(){
     $("#btn-input-nombreusuario").focus();
     $("#btn-input-nombregrupo").val("");
     $("#btn-input-nombregrupo").focus();
+
+    window.location.reload();
+
+}
+
+function remove_user(){
+    usuario = $("#btn-input-nombreusuario").val();
+    grupo = $("#btn-input-nombregrupo").val();
+
+    url = "/eliminarUsuarioGrupo";
+    $.get(url, {nombreUsuario: usuario, nombreGrupo: grupo}, function(res) {});
+
+    $("#btn-input-nombreusuario").val("");
+    $("#btn-input-nombreusuario").focus();
+    $("#btn-input-nombregrupo").val("");
+    $("#btn-input-nombregrupo").focus();
+
+    window.location.reload();
 }
 
 function send_message(msg) {
