@@ -33,10 +33,10 @@ public class ControladorFicheros {
     }
 
 
-    @GetMapping(PUBLIC_FILES_PATH + "/{filename:.+}")
+    @GetMapping(PUBLIC_FILES_PATH + "/{filename:.+}" + "/{sender}" + "/{receiver}")
     @ResponseBody
-    public ResponseEntity<Resource> serveFile(@PathVariable String filename, @AuthenticationPrincipal final UserDetails ud) {
-        Resource file = storageService.loadAsResource(filename);
+    public ResponseEntity<Resource> serveFile(@PathVariable String filename,@PathVariable String sender, @PathVariable String receiver) {
+        Resource file = storageService.loadAsResource(filename,sender, receiver);
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
@@ -44,11 +44,11 @@ public class ControladorFicheros {
     @PostMapping("/file")
     public String handleFileUpload(@RequestParam("file") MultipartFile file,
                                    @RequestParam("currentTo") String destino, @AuthenticationPrincipal final UserDetails ud) throws JSONException {
-
-        System.out.println("Fichero subido por : " + ud.getUsername() + " para " + destino);
-        String filename = storageService.store(file, ud.getUsername(), destino);
+        String sender = ud.getUsername();
+        System.out.println("Fichero subido por : " + sender + " para " + destino);
+        String filename = storageService.store(file, sender, destino);
         if(filename != null) {
-            controladorWebSocket.enviarMensajeFichero(new Mensaje(ud.getUsername(), "<a href=" + PUBLIC_FILES_PATH + "/" + filename + " >" + filename + "</a>", destino));
+            controladorWebSocket.enviarMensajeFichero(new Mensaje(sender, "<a href=" + PUBLIC_FILES_PATH + "/" + filename + "/" + sender + "/" + destino + " >" + filename + "</a>", destino));
         }
         return "redirect:/chat?&to=" + destino;
     }

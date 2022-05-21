@@ -50,14 +50,15 @@ public class ServicioAlmacenamientoFS implements ServicioAlmacenamiento {
 
 
 	@Override
-	public Path load(String filename) {
-		return rootLocation.resolve(filename);
+	public Path load(String filename, String sender, String receiver) {
+		Path fileLocation = Paths.get(LOCAL_PATH, sender, receiver);
+		return fileLocation.resolve(filename);
 	}
 
 	@Override
-	public Resource loadAsResource(String filename) {
+	public Resource loadAsResource(String filename, String sender, String receiver) {
 		try {
-			Path file = load(filename);
+			Path file = load(filename, sender, receiver);
 			Resource resource = new UrlResource(file.toUri());
 			if (resource.exists() || resource.isReadable()) {
 				return resource;
