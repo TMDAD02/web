@@ -13,7 +13,7 @@ import java.util.List;
 
 @Component
 public class Rabbit {
-    public static final String COLA_PETICIONES = "peticiones";
+    public static final String COLA_PETICIONES = "patos";
 
     private final RabbitTemplate rabbitTemplate;
 

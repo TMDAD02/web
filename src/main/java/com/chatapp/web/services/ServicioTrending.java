@@ -1,5 +1,10 @@
 package com.chatapp.web.services;
 
+import com.chatapp.web.rabbit.Rabbit;
+import io.cucumber.java.sl.In;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -9,15 +14,20 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.chatapp.web.services.ServicioGrupos.NOMBRE_COMANDO;
+import static com.chatapp.web.services.ServicioGrupos.PARAMETROS;
+
 @Service
 public class ServicioTrending {
 
     private Map<String, Integer> words = new HashMap<>();
     private String[] sustantivos;
-    //private static List<String> trends;
     private Map<String, Integer> trends;
 
-    public void update(String contenido) {
+    @Autowired
+    Rabbit rabbit;
+
+    public void actualizarLista(String contenido) {
         StringTokenizer st = new StringTokenizer(contenido, " ");
         while (st.hasMoreTokens()) {
             String token = st.nextToken();
@@ -42,7 +52,7 @@ public class ServicioTrending {
         return trends;
     }
 
-    public void init() {
+    public void iniciar() {
         List<String> list = new ArrayList<>(62500);
         File file = new File("sustantivos.txt");
         try {
@@ -73,5 +83,27 @@ public class ServicioTrending {
             }
         }
         return -1;
+    }
+
+    // No la mejor solución, pero funcionará...
+    private JSONObject mapToJson(Map<String, Integer> map) throws JSONException {
+        JSONObject out = new JSONObject();
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            String key = entry.getKey();
+            int value = entry.getValue();
+            out.put(key, value);
+        }
+        return out;
+    }
+
+    public void actualizarTrending() throws JSONException {
+        JSONObject solicitud = new JSONObject();
+        solicitud.put(NOMBRE_COMANDO, "ACTUALIZAR_TRENDING");
+        sorting();
+        JSONObject parametros = new JSONObject();
+        parametros.put("listaTrending", mapToJson(trends));
+        solicitud.put(PARAMETROS, parametros);
+        System.out.println("Petición enviada: " + parametros);
+        rabbit.enviaryRecibirMensaje(solicitud);
     }
 }

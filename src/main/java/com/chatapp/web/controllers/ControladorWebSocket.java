@@ -10,7 +10,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.user.SimpUser;
 import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.stereotype.Controller;
@@ -51,7 +50,7 @@ public class ControladorWebSocket {
             boolean destinatarioConectado = esUsuarioConectado(to);
             simpMessagingTemplate.convertAndSend("/topic/" + to, mensaje);
             servicioChat.guardarMensaje(mensaje, destinatarioConectado);
-            servicioTrending.update(text);
+            servicioTrending.actualizarLista(text);
         }
     }
 

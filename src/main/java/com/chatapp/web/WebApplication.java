@@ -19,7 +19,7 @@ public class WebApplication {
 	CommandLineRunner init(ServicioAlmacenamiento storageService, ServicioTrending servicioTrending) {
 		return (args) -> {
 			storageService.init();
-			servicioTrending.init();
+			servicioTrending.iniciar();
 		};
 	}
 }
