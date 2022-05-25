@@ -18,8 +18,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 
 import static com.chatapp.web.controllers.ControladorGrupos.PARAMETROS_NOMBRE;
-import static com.chatapp.web.controllers.ControladorGrupos.RESULTADO_RESPUESTA_NOMBRE;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Controller
@@ -43,7 +41,7 @@ public class ControladorMvc {
 
     @GetMapping("/chat")
     public String chat(@RequestParam String to, @AuthenticationPrincipal UserDetails userDetails) throws Throwable {
-        if(servicioUsuarios.existeUsuario(to)) {
+        if(servicioUsuarios.existeUsuario(to) || to.equals("anuncios")) {
             return "chat";
         } else {
             JSONObject respuesta = servicioGrupos.obtenerTodosGrupos(userDetails.getUsername());

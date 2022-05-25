@@ -59,7 +59,7 @@ public class ControladorWebSocket {
         System.out.println("Fichero: " + mensaje);
         boolean destinatarioConectado = esUsuarioConectado(mensaje.getDestino());
         metricas.incrementMessages();
-        //metricas.incrementBytes(mensaje.getContenido().getBytes().length);
+
         simpMessagingTemplate.convertAndSend("/topic/" + mensaje.getDestino(), mensaje);
         servicioChat.guardarMensaje(mensaje, destinatarioConectado);
 
