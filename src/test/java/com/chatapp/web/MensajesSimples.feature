@@ -35,7 +35,7 @@ Feature: Enviar mensajes a otros usuarios para tener conversaciones puntuales
     When Abrir el navegador y entrar en la aplicación
     Then Login es mostrado
     When Usuario introduce su nickname 'maria'
-    Then Mensaje 'Hola maria, saludos desde Selenium' es recibido por alerta
+    #Then Mensaje 'Hola maria, saludos desde Selenium' es recibido por alerta
     Then Mensaje 'Hola maria, saludos desde Selenium, pero estas offline' es recibido por alerta
     And Cerrar el navegador
 
@@ -59,11 +59,11 @@ Feature: Enviar mensajes a otros usuarios para tener conversaciones puntuales
     And Cinco usuarios envian el mensaje
     And Usuario acepta todas las alertas
     And Usuario selecciona otro usuario 'maria' para chatear en sesion 0
-    Then El mensaje 'Hola mario, soy maria en prueba simultanea' es recibido con éxito
+    Then El mensaje 'Hola mario, soy maria en prueba simultanea' es recibido con éxito en sesión 0
     And Usuario selecciona otro usuario 'paco' para chatear en sesion 0
-    Then El mensaje 'Hola mario, soy paco en prueba simultanea' es recibido con éxito
+    Then El mensaje 'Hola mario, soy paco en prueba simultanea' es recibido con éxito en sesión 0
     And Usuario selecciona otro usuario 'omar' para chatear en sesion 0
-    Then El mensaje 'Hola mario, soy omar en prueba simultanea' es recibido con éxito
+    Then El mensaje 'Hola mario, soy omar en prueba simultanea' es recibido con éxito en sesión 0
     And Usuario selecciona otro usuario 'admin' para chatear en sesion 0
-    Then El mensaje 'Hola mario, soy admin en prueba simultanea' es recibido con éxito
+    Then El mensaje 'Hola mario, soy admin en prueba simultanea' es recibido con éxito en sesión 0
     Then Cerrar todos los navegadores

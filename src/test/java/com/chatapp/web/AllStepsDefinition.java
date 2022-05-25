@@ -187,6 +187,15 @@ public class AllStepsDefinition {
         assertTrue(mensajesEnviados.get(mensajesEnviados.size() - 1).getText().contains(mensaje));
     }
 
+    @Then("El mensaje {string} es recibido con éxito en sesión {int}")
+    public void mensajesSonRecibidosOk(String mensaje, int sesion) throws InterruptedException {
+        Thread.sleep(3000);
+        // System.out.println(simultaneos.get(0).getPageSource());
+        List<WebElement> mensajesEnviados = simultaneos.get(sesion).findElements(By.className("msg_sent"));
+        assertTrue(mensajesEnviados.get(mensajesEnviados.size() - 1).getText().contains(mensaje));
+    }
+
+
     @Then("El anuncio {string} es persistente en el sistema")
     public void anuncioEsPersistente(String mensaje) throws InterruptedException {
         Thread.sleep(3000);
