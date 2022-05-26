@@ -445,7 +445,7 @@ function getGroups() {
     gruposTemplate = "<a href='chat?&to=<%= usr %>'> <%= usr %> </a><br>"
     var compiledUsuarioTemplate = _.template(gruposTemplate);
     var todos = ""
-    url = "/grupos"
+-     url = "/grupos/obtener"
     $.getJSON(url, function(data) {
         console.log(data);
         var listaGrupos = data.listaGrupos;
@@ -463,7 +463,7 @@ function getGroups() {
 }
 
 function setUploadButton() {
-    uploadTemplate = "<form method=\"POST\" enctype=\"multipart/form-data\"  action=\"/file\" >\n" +
+    uploadTemplate = "<form method=\"POST\" enctype=\"multipart/form-data\"  action=\"/fichero\" >\n" +
         "                            <table>\n" +
         "                                <tr><td><input id=\"input-file\" type=\"file\" name=\"file\" /></td>\n" +
         "                                    <input type=\"hidden\" name=\"currentTo\" value=\"<%= currentTo %>\" />\n" +
@@ -495,7 +495,7 @@ function setUploadButton() {
     });
 }*/
 function getMessagesUsuario() {
-    url = "/mensajesUsuario?destinatario="+currentTo;
+    url = "/mensajes?destinatario="+currentTo;
     $.getJSON(url, function(mensajes) {
         console.log(mensajes);
         var listaMensajes = mensajes.listaMensajes;
@@ -514,7 +514,7 @@ function getMessagesUsuario() {
 }
 
 function getMessagesGrupo() {
-    url = "/mensajesGrupo?destinatario="+currentTo;
+    url = "/grupos/mensajes?destinatario="+currentTo;
     $.getJSON(url, function(mensajes) {
         console.log(mensajes);
         var listaMensajes = mensajes.listaMensajes;
@@ -635,7 +635,7 @@ function create_group(){
     grupo = $("#btn-input-create").val();
     //send_message(msg);
 
-    url = "/crearGrupo";
+    url = "/grupos/crear";
     $.get(url, {nombreGrupo: grupo}, function(res) {});
 
     $("#btn-input-create").val("");
@@ -650,7 +650,7 @@ function create_group(){
 function remove_group(){
     grupo = $("#btn-input-remove").val();
 
-    url = "/eliminarGrupo";
+    url = "/grupos/eliminar";
     $.get(url, {nombreGrupo: grupo}, function(res) {});
 
     $("#btn-input-remove").val("");
@@ -663,7 +663,7 @@ function add_user(){
     usuario = $("#btn-input-nombreusuario").val();
     grupo = $("#btn-input-nombregrupo").val();
 
-    url = "/anadirUsuarioGrupo";
+    url = "/grupos/anadir_usuario";
     $.get(url, {nombreUsuario: usuario, nombreGrupo: grupo}, function(res) {});
 
     $("#btn-input-nombreusuario").val("");
@@ -679,7 +679,7 @@ function remove_user(){
     usuario = $("#btn-input-nombreusuario").val();
     grupo = $("#btn-input-nombregrupo").val();
 
-    url = "/eliminarUsuarioGrupo";
+    url = "/grupos/eliminar_usuario";
     $.get(url, {nombreUsuario: usuario, nombreGrupo: grupo}, function(res) {});
 
     $("#btn-input-nombreusuario").val("");

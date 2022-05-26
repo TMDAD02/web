@@ -9,10 +9,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Base64;
+import static com.chatapp.web.services.ServicioUsuarios.NOMBRE_COMANDO;
+import static com.chatapp.web.services.ServicioUsuarios.PARAMETROS;
 
 @Service
 public class ServicioGrupos implements UserDetailsService{
@@ -63,7 +63,7 @@ public class ServicioGrupos implements UserDetailsService{
         return rabbit.enviaryRecibirMensaje(solicitud);
     }
 
-    public JSONObject obtenerTodosGrupos(String miUsuario) throws JSONException {
+    public JSONObject obtenerGrupos(String miUsuario) throws JSONException {
         JSONObject solicitud = new JSONObject();
         solicitud.put(NOMBRE_COMANDO, "OBTENER_TODOS_GRUPOS");
 
@@ -74,7 +74,6 @@ public class ServicioGrupos implements UserDetailsService{
     }
 
     public JSONObject crearGrupo(String miUsuario, String nombreGrupo) throws JSONException {
-        //System.out.println("hemos solicitado crear grupo!!!!!!!!!!!!!!!! " );
         JSONObject solicitud = new JSONObject();
         solicitud.put(NOMBRE_COMANDO, "CREAR_GRUPO");
 
@@ -86,7 +85,6 @@ public class ServicioGrupos implements UserDetailsService{
     }
 
     public JSONObject eliminarGrupo(String miUsuario, String nombreGrupo) throws JSONException {
-        //System.out.println("hemos solicitado eiminar grupo!!!!!!!!!!!!!!!! " );
         JSONObject solicitud = new JSONObject();
         solicitud.put(NOMBRE_COMANDO, "ELIMINAR_GRUPO");
 
@@ -102,9 +100,6 @@ public class ServicioGrupos implements UserDetailsService{
         JSONObject solicitud = new JSONObject();
         solicitud.put(NOMBRE_COMANDO, "ANADIR_USUARIO_GRUPO");
 
-        //String[] splitted = nombreUsuarioGrupo.split(",");
-        //System.out.println("usuario: "+splitted[0]);
-        //System.out.println("grupo: "+splitted[1]);
         System.out.println("Añadir usario grupo");
         System.out.println("nombre usuario es: "+ nombreUsuario);
 
@@ -121,9 +116,6 @@ public class ServicioGrupos implements UserDetailsService{
         JSONObject solicitud = new JSONObject();
         solicitud.put(NOMBRE_COMANDO, "ELIMINAR_USUARIO_GRUPO");
 
-        //String[] splitted = nombreUsuarioGrupo.split(",");
-        //System.out.println("usuario: "+splitted[0]);
-        //System.out.println("grupo: "+splitted[1]);
         System.out.println("ELIMINAR usario grupo");
         System.out.println("nombre usuario es: "+ nombreUsuario);
 
@@ -131,6 +123,16 @@ public class ServicioGrupos implements UserDetailsService{
         parametros.put("miusuario", miUsuario);
         parametros.put("nombreusuario", nombreUsuario);
         parametros.put("nombregrupo", nombreGrupo);
+        solicitud.put(PARAMETROS, parametros);
+        return rabbit.enviaryRecibirMensaje(solicitud);
+    }
+
+    public JSONObject obtenerMensajesGrupos( String destinatario) throws JSONException {
+        JSONObject solicitud = new JSONObject();
+        solicitud.put(NOMBRE_COMANDO, "OBTENER_MENSAJES_GRUPOS");
+
+        JSONObject parametros = new JSONObject();
+        parametros.put("destino", destinatario);
         solicitud.put(PARAMETROS, parametros);
         return rabbit.enviaryRecibirMensaje(solicitud);
     }

@@ -35,16 +35,6 @@ public class ServicioChat {
         rabbit.enviaryRecibirMensaje(solicitud);
     }
 
-    /*public JSONObject obtenerMensajes(String fuente, String destinatario) throws JSONException {
-        JSONObject solicitud = new JSONObject();
-        solicitud.put(NOMBRE_COMANDO, "OBTENER_MENSAJES");
-
-        JSONObject parametros = new JSONObject();
-        parametros.put("fuente", fuente);
-        parametros.put("destino", destinatario);
-        solicitud.put(PARAMETROS, parametros);
-        return rabbit.enviaryRecibirMensaje(solicitud);
-    }*/
 
     public JSONObject obtenerMensajesUsuarios(String fuente, String destinatario) throws JSONException {
         JSONObject solicitud = new JSONObject();
@@ -57,15 +47,7 @@ public class ServicioChat {
         return rabbit.enviaryRecibirMensaje(solicitud);
     }
 
-    public JSONObject obtenerMensajesGrupos( String destinatario) throws JSONException {
-        JSONObject solicitud = new JSONObject();
-        solicitud.put(NOMBRE_COMANDO, "OBTENER_MENSAJES_GRUPOS");
 
-        JSONObject parametros = new JSONObject();
-        parametros.put("destino", destinatario);
-        solicitud.put(PARAMETROS, parametros);
-        return rabbit.enviaryRecibirMensaje(solicitud);
-    }
 
     public JSONObject obtenerMensajesNoLeidos(String usuario) throws JSONException {
         JSONObject solicitud = new JSONObject();
@@ -75,5 +57,15 @@ public class ServicioChat {
         parametros.put("usuario", usuario);
         solicitud.put(PARAMETROS, parametros);
         return rabbit.enviaryRecibirMensaje(solicitud);
+    }
+
+    public int obtenerChatsActivos() throws JSONException {
+        JSONObject solicitud = new JSONObject();
+        solicitud.put(NOMBRE_COMANDO, "OBTENER_CHATS_ACTIVOS");
+
+        solicitud.put(PARAMETROS, new JSONObject());
+        JSONObject respuesta = rabbit.enviaryRecibirMensaje(solicitud);
+        System.out.println("Respuesta: " + respuesta);
+        return Math.toIntExact(respuesta.getJSONObject(PARAMETROS).getLong("usuariosActivos"));
     }
 }

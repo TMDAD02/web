@@ -41,13 +41,12 @@ public class ControladorFicheros {
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
-    @PostMapping("/file")
+    @PostMapping("/fichero")
     public String handleFileUpload(@RequestParam("file") MultipartFile file,
                                    @RequestParam("currentTo") String destino, @AuthenticationPrincipal final UserDetails ud) throws JSONException {
         String sender = ud.getUsername();
-        System.out.println("Fichero subido por : " + sender + " para " + destino);
         String filename = storageService.store(file, sender, destino);
-        if(filename != null) {
+        if(filename != null) { // Chapuza pero funciona. Cambiar en el futuro
             controladorWebSocket.enviarMensajeFichero(new Mensaje(sender, "<a href=" + PUBLIC_FILES_PATH + "/" + filename + "/" + sender + "/" + destino + " >" + filename + "</a>", destino));
         }
         return "redirect:/chat?&to=" + destino;

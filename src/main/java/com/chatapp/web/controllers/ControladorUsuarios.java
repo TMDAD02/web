@@ -38,15 +38,6 @@ public class ControladorUsuarios {
         return new ResponseEntity<>(parametros.toString(), HttpStatus.OK);
     }
 
-    @PostMapping(path = "/autenticar")
-    public ResponseEntity<String> autenticar(@RequestParam String nombre, HttpServletResponse response) {
-        Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(nombre, MASTER_PASSWORD));
-        SecurityContextHolder.getContext().setAuthentication(auth);
-        UserDetails userDetails = (UserDetails) auth.getPrincipal();
-        response.addCookie(new Cookie("usuario", userDetails.getUsername()));
-
-        return ResponseEntity.ok().body("");
-    }
 
     @GetMapping(path = "/usuarios")
     public ResponseEntity<?> obtenerUsuarios(@AuthenticationPrincipal final UserDetails ud) {

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,23 +27,8 @@ public class ControladorChat {
     private AuthenticationManager authenticationManager;
 
 
-    /*@GetMapping(path = "/mensajes", produces = "application/json")
-    public ResponseEntity<?> obtenerMensajes(@RequestParam String destinatario) {
-        try {
-            UserDetails ud = (UserDetails) (SecurityContextHolder.getContext().getAuthentication()).getPrincipal();
-            JSONObject respuesta = servicioChat.obtenerMensajes(ud.getUsername(), destinatario);
-            if(respuesta.getString(RESULTADO_RESPUESTA_NOMBRE).equals("OBTENER_MENSAJES_CORRECTO")) {
-                JSONObject parametros = respuesta.getJSONObject(PARAMETROS_NOMBRE);
-                return new ResponseEntity<>(parametros.toString(), HttpStatus.OK);
-            }
 
-        } catch (JSONException e) {
-            return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
-    }*/
-
-    @GetMapping(path = "/mensajesUsuario", produces = "application/json")
+    @GetMapping(path = "/mensajes", produces = "application/json")
     public ResponseEntity<?> obtenerMensajesUsuario(@RequestParam String destinatario) {
         try {
             UserDetails ud = (UserDetails) (SecurityContextHolder.getContext().getAuthentication()).getPrincipal();
@@ -58,20 +44,7 @@ public class ControladorChat {
         return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @GetMapping(path = "/mensajesGrupo", produces = "application/json")
-    public ResponseEntity<?> obtenerMensajesGrupo(@RequestParam String destinatario) {
-        try {
-            JSONObject respuesta = servicioChat.obtenerMensajesGrupos(destinatario);
-            if(respuesta.getString(RESULTADO_RESPUESTA_NOMBRE).equals("OBTENER_MENSAJES_GRUPOS_CORRECTO")) {
-                JSONObject parametros = respuesta.getJSONObject(PARAMETROS_NOMBRE);
-                return new ResponseEntity<>(parametros.toString(), HttpStatus.OK);
-            }
 
-        } catch (JSONException e) {
-            return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 
     @GetMapping(path = "/noleidos", produces = "application/json")
     public ResponseEntity<?> obtenerMensajesNoLeidos() {

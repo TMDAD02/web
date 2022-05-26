@@ -5,8 +5,6 @@ import com.chatapp.web.services.ServicioUsuarios;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -44,20 +42,14 @@ public class ControladorMvc {
         if(servicioUsuarios.existeUsuario(to) || to.equals("anuncios")) {
             return "chat";
         } else {
-            JSONObject respuesta = servicioGrupos.obtenerTodosGrupos(userDetails.getUsername());
-            System.out.println(respuesta);
+            JSONObject respuesta = servicioGrupos.obtenerGrupos(userDetails.getUsername());
             JSONArray grupos = ((JSONObject)  respuesta.get(PARAMETROS_NOMBRE)).getJSONArray("listaGrupos");
             if (grupos.toString().contains(to)) {
                 return "chat";
             }
 
-            throw new ResponseStatusException(UNAUTHORIZED, "Unable to find resource");
+            throw new ResponseStatusException(UNAUTHORIZED, "");
         }
-    }
-
-    @GetMapping("/admin")
-    public String admin() {
-        return "admin";
     }
 
 }
