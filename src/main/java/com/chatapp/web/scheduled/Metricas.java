@@ -44,7 +44,6 @@ public class Metricas {
     private void establecerChatsActivos() {
         try {
             int chatsActivos = servicioChat.obtenerChatsActivos();
-            System.out.println("ChatsActivos " + chatsActivos);
             currentChatCounter.set(chatsActivos);
         } catch (JSONException e) {
             System.out.println("Error al actualizar chats: " + e);

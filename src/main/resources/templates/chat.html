@@ -350,7 +350,7 @@ $("#username").text(currentTo);
         $( "#chat_window_1" ).remove();
     });
 
-    stompClient = Stomp.client("wss://ge.danielhuici.ml:8888/ws");
+    stompClient = Stomp.client("wss://ge.danielhuici.ml/ws");
     stompClient.connect({"username": myUsername}, function (frame) {
         showConnected()
         reconnectAttempts = 0;
@@ -364,7 +364,6 @@ $("#username").text(currentTo);
         console.log("Error Frame: " + frame);
         if (frame.indexOf("Whoops! Lost connection") >= 0){
             console.log("Handling system disconnect");
-            setConnected(false);
             if (reconnectAttempts <= maximumReconnectAttempts){
                 reconnectAttempts++;
                 setTimeout(function(){ connect() }, 15000);
@@ -445,7 +444,7 @@ function getGroups() {
     gruposTemplate = "<a href='chat?&to=<%= usr %>'> <%= usr %> </a><br>"
     var compiledUsuarioTemplate = _.template(gruposTemplate);
     var todos = ""
--     url = "/grupos/obtener"
+    url = "/grupos/obtener"
     $.getJSON(url, function(data) {
         console.log(data);
         var listaGrupos = data.listaGrupos;
@@ -625,8 +624,7 @@ function send_chat(){
 function send_broadcast(){
     msg = $("#btn-broadcast").val();
     send_msg_broadcast(msg);
-    bajalo_anuypubli();
-    // Implementar aquí el envío broadcast
+
     $("#btn-broadcast").val("");
     $("#btn-broadcast").focus();
 }
@@ -707,10 +705,10 @@ function send_msg_broadcast(msg) {
 
     if (msg.length < 500) {
         var jsonString =  JSON.stringify({'contenido': msg, 'fuente': myUsername, 'destino':"anuncios"});
-        stompClient.send("/app/chat/" + "anuypubli", {'username': "anuypubli"}, jsonString);
+        stompClient.send("/app/chat/anuncios", {'username': "anuncios"}, jsonString);
         mensaje = compiledSending({msg:msg,usr:myUsername,datetim:getCurrentTime(),avat:"https://muratselek.com.tr/wp-content/uploads/2019/01/yorum-icon-avatar-men-768x768.png"});
 
-        $("#chat_base_anuypubli").append(mensaje);
+        $("#chat_base").append(mensaje);
     }
 }
 
@@ -721,12 +719,7 @@ function bajalo(){
      wtf.scrollTop(height);
      //get_users();
 }
-function bajalo_anuypubli(){
-    var wtf    = $("#chat_base_anuypubli");
-    var height = wtf[0].scrollHeight;
-    wtf.scrollTop(height);
-    //get_users();
-}
+
 
 
 </script>

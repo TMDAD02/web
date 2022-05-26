@@ -37,10 +37,6 @@ public class Rabbit {
         return new JSONObject(respuesta);
     }
 
-    // No usar
-    public void enviarMensaje(JSONObject mensaje) {
-        rabbitTemplate.convertAndSend(Rabbit.COLA_PETICIONES, mensaje.toString());
-    }
 
 
 

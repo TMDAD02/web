@@ -32,7 +32,6 @@ public class WebSocketMessageBrokerConfig implements WebSocketMessageBrokerConfi
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         config.setApplicationDestinationPrefixes("/app"); // Mensajes que envía el usuario
-        //config.enableSimpleBroker("/topic");
 
         config.enableStompBrokerRelay("/topic")
                 .setRelayHost("rat.rmq2.cloudamqp.com")

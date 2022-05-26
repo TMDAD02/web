@@ -65,7 +65,6 @@ public class ServicioChat {
 
         solicitud.put(PARAMETROS, new JSONObject());
         JSONObject respuesta = rabbit.enviaryRecibirMensaje(solicitud);
-        System.out.println("Respuesta: " + respuesta);
         return Math.toIntExact(respuesta.getJSONObject(PARAMETROS).getLong("usuariosActivos"));
     }
 }
