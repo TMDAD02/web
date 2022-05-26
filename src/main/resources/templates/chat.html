@@ -215,15 +215,11 @@ img {
                         <input id="btn-input-create" type="text" class="form-control input-sm chat_input" placeholder="Insert name of new group..." />
                         <span class="input-group-btn">
                             <button class="btn btn-primary btn-sm" id="btn-chat" onclick="create_group()">create group</button>
+                            <button class="btn btn-primary btn-sm" id="btn-chat" onclick="remove_group()">remove group</button>
                             </span>
 
                     </div>
-                    <div class="input-group">
-                        <input id="btn-input-remove" type="text" class="form-control input-sm chat_input" placeholder="Insert group name to remove.." />
-                        <span class="input-group-btn">
-                            <button class="btn btn-primary btn-sm" id="btn-chat" onclick="remove_group()">remove group</button>
-                            </span>
-                    </div>
+
                     <div class="input-group">
                         <input id="btn-input-nombreusuario" type="text" class="form-control input-sm chat_input" placeholder="Insert nombre usuario añadir.." />
                         <input id="btn-input-nombregrupo" type="text" class="form-control input-sm chat_input" placeholder="Insert nombre grupo añadir.." />
@@ -634,7 +630,8 @@ function create_group(){
     //send_message(msg);
 
     url = "/grupos/crear";
-    $.get(url, {nombreGrupo: grupo}, function(res) {});
+    //$.get(url, {nombreGrupo: grupo}, function(res) {});
+    $.post(url, {nombreGrupo: grupo}, function(res) {} );
 
     $("#btn-input-create").val("");
     $("#btn-input-create").focus();
@@ -646,10 +643,11 @@ function create_group(){
 }
 
 function remove_group(){
-    grupo = $("#btn-input-remove").val();
+    grupo = $("#btn-input-create").val();
 
     url = "/grupos/eliminar";
-    $.get(url, {nombreGrupo: grupo}, function(res) {});
+    //$.get(url, {nombreGrupo: grupo}, function(res) {});
+    $.post(url, {nombreGrupo: grupo}, function(res) {});
 
     $("#btn-input-remove").val("");
     $("#btn-input-remove").focus();
@@ -662,14 +660,13 @@ function add_user(){
     grupo = $("#btn-input-nombregrupo").val();
 
     url = "/grupos/anadir_usuario";
-    $.get(url, {nombreUsuario: usuario, nombreGrupo: grupo}, function(res) {});
+    //$.get(url, {nombreUsuario: usuario, nombreGrupo: grupo}, function(res) {});
+    $.post(url, {nombreUsuario: usuario, nombreGrupo: grupo}, function(res) {});
 
     $("#btn-input-nombreusuario").val("");
     $("#btn-input-nombreusuario").focus();
     $("#btn-input-nombregrupo").val("");
     $("#btn-input-nombregrupo").focus();
-
-    window.location.reload();
 
 }
 
@@ -678,14 +675,14 @@ function remove_user(){
     grupo = $("#btn-input-nombregrupo").val();
 
     url = "/grupos/eliminar_usuario";
-    $.get(url, {nombreUsuario: usuario, nombreGrupo: grupo}, function(res) {});
+    //$.get(url, {nombreUsuario: usuario, nombreGrupo: grupo}, function(res) {});
+    $.post(url, {nombreUsuario: usuario, nombreGrupo: grupo}, function(res) {});
 
     $("#btn-input-nombreusuario").val("");
     $("#btn-input-nombreusuario").focus();
     $("#btn-input-nombregrupo").val("");
     $("#btn-input-nombregrupo").focus();
 
-    window.location.reload();
 }
 
 function send_message(msg) {

@@ -43,11 +43,9 @@ public class ControladorGrupos {
         return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @GetMapping(path = "/grupos/crear")
+    @PostMapping(path = "/grupos/crear")
     public ResponseEntity<?> crearGrupo(@RequestParam String nombreGrupo, @AuthenticationPrincipal final UserDetails ud) {
         try {
-            //UserDetails ud = (UserDetails) (SecurityContextHolder.getContext().getAuthentication()).getPrincipal();Ç
-
             JSONObject respuesta = servicioGrupos.crearGrupo(ud.getUsername(), nombreGrupo);
             System.out.println(respuesta);
             if(respuesta.getString(RESULTADO_RESPUESTA_NOMBRE).equals("GRUPO_CREADO_CORRECTO")) {
@@ -76,10 +74,9 @@ public class ControladorGrupos {
         return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @GetMapping(path = "/grupos/eliminar")
+    @PostMapping(path = "/grupos/eliminar")
     public ResponseEntity<?> eliminarGrupo(@RequestParam String nombreGrupo, @AuthenticationPrincipal final UserDetails ud) {
         try {
-            //UserDetails ud = (UserDetails) (SecurityContextHolder.getContext().getAuthentication()).getPrincipal();
             JSONObject respuesta = servicioGrupos.eliminarGrupo(ud.getUsername(), nombreGrupo);
             System.out.println(respuesta);
             if(respuesta.getString(RESULTADO_RESPUESTA_NOMBRE).equals("GRUPO_ELIMINADO_CORRECTO")) {
@@ -93,7 +90,7 @@ public class ControladorGrupos {
         return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @GetMapping(path = "/grupos/anadir_usuario")
+    @PostMapping(path = "/grupos/anadir_usuario")
     public ResponseEntity<?> anadirUsuarioGrupo(@RequestParam String nombreUsuario, @RequestParam String nombreGrupo, @AuthenticationPrincipal final UserDetails ud) {
         try {
 
@@ -110,7 +107,7 @@ public class ControladorGrupos {
         return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @GetMapping(path = "/grupos/eliminar_usuario")
+    @PostMapping(path = "/grupos/eliminar_usuario")
     public ResponseEntity<?> eliminarUsuarioGrupo(@RequestParam String nombreUsuario, @RequestParam String nombreGrupo, @AuthenticationPrincipal final UserDetails ud) {
         try {
 
