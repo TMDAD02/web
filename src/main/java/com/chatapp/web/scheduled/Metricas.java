@@ -45,7 +45,7 @@ public class Metricas {
         try {
             int chatsActivos = servicioChat.obtenerChatsActivos();
             currentChatCounter.set(chatsActivos);
-        } catch (JSONException e) {
+        } catch (Throwable e) {
             System.out.println("Error al actualizar chats: " + e);
         }
     }
@@ -54,7 +54,7 @@ public class Metricas {
     private void updateTrending() {
         try {
             servicioTrending.actualizarTrending();
-        } catch (JSONException e) {
+        } catch (Throwable e) {
             System.out.println("Error al actualizar trending: " + e);
         }
     }

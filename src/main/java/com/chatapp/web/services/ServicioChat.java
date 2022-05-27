@@ -22,7 +22,7 @@ public class ServicioChat {
         return null;
     }
 
-    public void guardarMensaje(Mensaje mensaje, boolean leido) throws JSONException {
+    public void guardarMensaje(Mensaje mensaje, boolean leido) throws Throwable {
         JSONObject solicitud = new JSONObject();
         solicitud.put(NOMBRE_COMANDO, "GUARDAR_MENSAJE");
         JSONObject parametros = new JSONObject();
@@ -36,7 +36,7 @@ public class ServicioChat {
     }
 
 
-    public JSONObject obtenerMensajesUsuarios(String fuente, String destinatario) throws JSONException {
+    public JSONObject obtenerMensajesUsuarios(String fuente, String destinatario) throws Throwable {
         JSONObject solicitud = new JSONObject();
         solicitud.put(NOMBRE_COMANDO, "OBTENER_MENSAJES_USUARIOS");
 
@@ -49,7 +49,7 @@ public class ServicioChat {
 
 
 
-    public JSONObject obtenerMensajesNoLeidos(String usuario) throws JSONException {
+    public JSONObject obtenerMensajesNoLeidos(String usuario) throws Throwable {
         JSONObject solicitud = new JSONObject();
         solicitud.put(NOMBRE_COMANDO, "OBTENER_MENSAJES_NO_LEIDOS");
 
@@ -59,7 +59,7 @@ public class ServicioChat {
         return rabbit.enviaryRecibirMensaje(solicitud);
     }
 
-    public int obtenerChatsActivos() throws JSONException {
+    public int obtenerChatsActivos() throws Throwable {
         JSONObject solicitud = new JSONObject();
         solicitud.put(NOMBRE_COMANDO, "OBTENER_CHATS_ACTIVOS");
 

@@ -61,7 +61,7 @@ public class ServicioUsuarios implements UserDetailsService {
         return rabbit.enviaryRecibirMensaje(solicitud);
     }
 
-    public JSONObject obtenerTodosUsuarios(String miUsuario) throws JSONException {
+    public JSONObject obtenerTodosUsuarios(String miUsuario) throws Throwable {
         JSONObject solicitud = new JSONObject();
         solicitud.put(NOMBRE_COMANDO, "OBTENER_TODOS_USUARIOS");
 
@@ -80,7 +80,6 @@ public class ServicioUsuarios implements UserDetailsService {
     }
 
     public String obtenerRole(String nombre) {
-        System.out.println("aver:" + nombre);
         if (nombre.equals("admin")) {
             return "ADMIN";
         }

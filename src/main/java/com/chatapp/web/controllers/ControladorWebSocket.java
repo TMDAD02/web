@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.chatapp.web.models.Mensaje.TAMANIO_MAXIMO;
@@ -41,8 +42,7 @@ public class ControladorWebSocket {
 
 
     @MessageMapping("/chat/{to}")
-    public void tratarChatPuntoPunto(@DestinationVariable String to, Mensaje mensaje) throws Exception {
-        System.out.println("Mensaje: " + mensaje);
+    public void tratarChatPuntoPunto(@DestinationVariable String to, Mensaje mensaje) throws Throwable {
         String text = mensaje.getContenido();
         if (text.length() < TAMANIO_MAXIMO) {
             metricas.incrementMessages();
@@ -55,8 +55,7 @@ public class ControladorWebSocket {
     }
 
 
-    public void enviarMensajeFichero(Mensaje mensaje) throws JSONException {
-        System.out.println("Fichero: " + mensaje);
+    public void enviarMensajeFichero(Mensaje mensaje) throws Throwable {
         boolean destinatarioConectado = esUsuarioConectado(mensaje.getDestino());
         metricas.incrementMessages();
 
@@ -68,12 +67,12 @@ public class ControladorWebSocket {
 
     @EventListener(SessionConnectEvent.class)
     public void handleWebsocketConnectListner(SessionConnectEvent event) {
-       System.out.println("Received a new websocket connection. Welcome " + event.getUser().getName());
+       System.out.println("Received a new websocket connection. Welcome " + Objects.requireNonNull(event.getUser()).getName());
     }
 
     @EventListener(SessionDisconnectEvent.class)
     public void handleWebsocketDisconnectListner(SessionDisconnectEvent event) {
-        System.out.println("Goodbye: " + event.getUser());
+        System.out.println("User " + event.getUser() + " has disconnected.");
     }
 
     private boolean esUsuarioConectado(String user) {

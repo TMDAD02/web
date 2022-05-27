@@ -84,7 +84,7 @@ public class ServicioTrending {
         return -1;
     }
 
-    // No la mejor solución, pero funcionará...
+    // No la mejor solución, pero funciona...
     private JSONObject mapToJson(Map<String, Integer> map) throws JSONException {
         JSONObject out = new JSONObject();
         for (Map.Entry<String, Integer> entry : map.entrySet()) {
@@ -95,14 +95,13 @@ public class ServicioTrending {
         return out;
     }
 
-    public void actualizarTrending() throws JSONException {
+    public void actualizarTrending() throws Throwable {
         JSONObject solicitud = new JSONObject();
         solicitud.put(NOMBRE_COMANDO, "ACTUALIZAR_TRENDING");
         sorting();
         JSONObject parametros = new JSONObject();
         parametros.put("listaTrending", mapToJson(trends));
         solicitud.put(PARAMETROS, parametros);
-        System.out.println("Petición enviada: " + parametros);
         rabbit.enviaryRecibirMensaje(solicitud);
     }
 }

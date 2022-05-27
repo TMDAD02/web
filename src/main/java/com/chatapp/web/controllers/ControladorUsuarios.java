@@ -32,10 +32,15 @@ public class ControladorUsuarios {
     private AuthenticationManager authenticationManager;
 
     @GetMapping(path = "/miusuario")
-    public ResponseEntity<?> obtenerUsuario(@AuthenticationPrincipal final UserDetails ud, HttpServletResponse response) throws JSONException {
+    public ResponseEntity<?> obtenerUsuario(@AuthenticationPrincipal final UserDetails ud, HttpServletResponse response)  {
         JSONObject parametros = new JSONObject();
-        parametros.put("usuario", ud.getUsername());
-        return new ResponseEntity<>(parametros.toString(), HttpStatus.OK);
+        try {
+            parametros.put("usuario", ud.getUsername());
+            return new ResponseEntity<>(parametros.toString(), HttpStatus.OK);
+        } catch (JSONException e) {
+            return new ResponseEntity<>("", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
 
@@ -44,13 +49,12 @@ public class ControladorUsuarios {
         try {
             //UserDetails ud = (UserDetails) (SecurityContextHolder.getContext().getAuthentication()).getPrincipal();
             JSONObject respuesta = servicioUsuarios.obtenerTodosUsuarios(ud.getUsername());
-            System.out.println(respuesta);
             if(respuesta.getString(RESULTADO_RESPUESTA_NOMBRE).equals("OBTENER_TODOS_USUARIOS_CORRECTO")) {
                 JSONObject parametros = respuesta.getJSONObject(PARAMETROS_NOMBRE);
                 return new ResponseEntity<>(parametros.toString(), HttpStatus.OK);
             }
 
-        } catch (JSONException e) {
+        } catch (Throwable e) {
             return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);

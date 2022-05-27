@@ -15,7 +15,7 @@ public class ControladorExcepciones {
 
     @ExceptionHandler(MultipartException.class)
     @ResponseStatus(value = HttpStatus.PAYLOAD_TOO_LARGE)
-    public ResponseEntity handleMultipartException(MultipartException ex) {
+    public ResponseEntity<?> handleMultipartException() {
         Map<String, String> result = new HashMap<>();
         result.put("message", "Error. Fichero muy grande ");
         return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)

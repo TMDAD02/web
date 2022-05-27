@@ -21,6 +21,8 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 @Controller
 public class ControladorMvc {
 
+    private static final String NOMBRE_CANAL_ANUNCIOS = "anuncios";
+
     @Autowired
     private ServicioUsuarios servicioUsuarios;
 
@@ -28,8 +30,8 @@ public class ControladorMvc {
     private ServicioGrupos servicioGrupos;
 
     @GetMapping("/")
-    public String setRootPath(Model model) throws IOException {
-        return "redirect:/chat?to=mario";
+    public String setRootPath() throws IOException {
+        return "redirect:/chat?to=mario"; // Por defecto, a mario.
     }
 
     @GetMapping("/login")
@@ -39,7 +41,7 @@ public class ControladorMvc {
 
     @GetMapping("/chat")
     public String chat(@RequestParam String to, @AuthenticationPrincipal UserDetails userDetails) throws Throwable {
-        if(servicioUsuarios.existeUsuario(to) || to.equals("anuncios")) {
+        if(servicioUsuarios.existeUsuario(to) || to.equals(NOMBRE_CANAL_ANUNCIOS)) {
             return "chat";
         } else {
             JSONObject respuesta = servicioGrupos.obtenerGrupos(userDetails.getUsername());

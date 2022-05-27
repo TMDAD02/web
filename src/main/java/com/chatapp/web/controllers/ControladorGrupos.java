@@ -31,13 +31,12 @@ public class ControladorGrupos {
         try {
             //UserDetails ud = (UserDetails) (SecurityContextHolder.getContext().getAuthentication()).getPrincipal();
             JSONObject respuesta = servicioGrupos.obtenerGrupos(ud.getUsername());
-            System.out.println(respuesta);
             if(respuesta.getString(RESULTADO_RESPUESTA_NOMBRE).equals("OBTENER_TODOS_GRUPOS_CORRECTO")) {
                 JSONObject parametros = respuesta.getJSONObject(PARAMETROS_NOMBRE);
                 return new ResponseEntity<>(parametros.toString(), HttpStatus.OK);
             }
 
-        } catch (JSONException e) {
+        } catch (Throwable e) {
             return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -47,13 +46,12 @@ public class ControladorGrupos {
     public ResponseEntity<?> crearGrupo(@RequestParam String nombreGrupo, @AuthenticationPrincipal final UserDetails ud) {
         try {
             JSONObject respuesta = servicioGrupos.crearGrupo(ud.getUsername(), nombreGrupo);
-            System.out.println(respuesta);
             if(respuesta.getString(RESULTADO_RESPUESTA_NOMBRE).equals("GRUPO_CREADO_CORRECTO")) {
                 JSONObject parametros = respuesta.getJSONObject(PARAMETROS_NOMBRE);
                 return new ResponseEntity<>(parametros.toString(), HttpStatus.OK);
             }
 
-        } catch (JSONException e) {
+        } catch (Throwable e) {
             return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -68,7 +66,7 @@ public class ControladorGrupos {
                 return new ResponseEntity<>(parametros.toString(), HttpStatus.OK);
             }
 
-        } catch (JSONException e) {
+        } catch (Throwable e) {
             return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -78,13 +76,12 @@ public class ControladorGrupos {
     public ResponseEntity<?> eliminarGrupo(@RequestParam String nombreGrupo, @AuthenticationPrincipal final UserDetails ud) {
         try {
             JSONObject respuesta = servicioGrupos.eliminarGrupo(ud.getUsername(), nombreGrupo);
-            System.out.println(respuesta);
             if(respuesta.getString(RESULTADO_RESPUESTA_NOMBRE).equals("GRUPO_ELIMINADO_CORRECTO")) {
                 JSONObject parametros = respuesta.getJSONObject(PARAMETROS_NOMBRE);
                 return new ResponseEntity<>(parametros.toString(), HttpStatus.OK);
             }
 
-        } catch (JSONException e) {
+        } catch (Throwable e) {
             return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -95,13 +92,12 @@ public class ControladorGrupos {
         try {
 
             JSONObject respuesta = servicioGrupos.anadirUsuarioGrupo(ud.getUsername(), nombreUsuario, nombreGrupo);
-            System.out.println(respuesta);
             if(respuesta.getString(RESULTADO_RESPUESTA_NOMBRE).equals("ANADIR_USUARIO_GRUPO_CORRECTO")) {
                 JSONObject parametros = respuesta.getJSONObject(PARAMETROS_NOMBRE);
                 return new ResponseEntity<>(parametros.toString(), HttpStatus.OK);
             }
 
-        } catch (JSONException e) {
+        } catch (Throwable e) {
             return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -112,13 +108,12 @@ public class ControladorGrupos {
         try {
 
             JSONObject respuesta = servicioGrupos.eliminarUsuarioGrupo(ud.getUsername(), nombreUsuario, nombreGrupo);
-            System.out.println(respuesta);
             if(respuesta.getString(RESULTADO_RESPUESTA_NOMBRE).equals("ELIMINAR_USUARIO_GRUPO_CORRECTO")) {
                 JSONObject parametros = respuesta.getJSONObject(PARAMETROS_NOMBRE);
                 return new ResponseEntity<>(parametros.toString(), HttpStatus.OK);
             }
 
-        } catch (JSONException e) {
+        } catch (Throwable e) {
             return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);

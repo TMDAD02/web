@@ -43,7 +43,7 @@ public class ControladorFicheros {
 
     @PostMapping("/fichero")
     public String handleFileUpload(@RequestParam("file") MultipartFile file,
-                                   @RequestParam("currentTo") String destino, @AuthenticationPrincipal final UserDetails ud) throws JSONException {
+                                   @RequestParam("currentTo") String destino, @AuthenticationPrincipal final UserDetails ud) throws Throwable {
         String sender = ud.getUsername();
         String filename = storageService.store(file, sender, destino);
         if(filename != null) { // Chapuza pero funciona. Cambiar en el futuro

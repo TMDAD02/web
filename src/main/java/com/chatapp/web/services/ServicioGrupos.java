@@ -63,7 +63,7 @@ public class ServicioGrupos implements UserDetailsService{
         return rabbit.enviaryRecibirMensaje(solicitud);
     }
 
-    public JSONObject obtenerGrupos(String miUsuario) throws JSONException {
+    public JSONObject obtenerGrupos(String miUsuario) throws Throwable {
         JSONObject solicitud = new JSONObject();
         solicitud.put(NOMBRE_COMANDO, "OBTENER_TODOS_GRUPOS");
 
@@ -73,7 +73,7 @@ public class ServicioGrupos implements UserDetailsService{
         return rabbit.enviaryRecibirMensaje(solicitud);
     }
 
-    public JSONObject crearGrupo(String miUsuario, String nombreGrupo) throws JSONException {
+    public JSONObject crearGrupo(String miUsuario, String nombreGrupo) throws Throwable {
         JSONObject solicitud = new JSONObject();
         solicitud.put(NOMBRE_COMANDO, "CREAR_GRUPO");
 
@@ -84,7 +84,7 @@ public class ServicioGrupos implements UserDetailsService{
         return rabbit.enviaryRecibirMensaje(solicitud);
     }
 
-    public JSONObject eliminarGrupo(String miUsuario, String nombreGrupo) throws JSONException {
+    public JSONObject eliminarGrupo(String miUsuario, String nombreGrupo) throws Throwable {
         JSONObject solicitud = new JSONObject();
         solicitud.put(NOMBRE_COMANDO, "ELIMINAR_GRUPO");
 
@@ -95,14 +95,11 @@ public class ServicioGrupos implements UserDetailsService{
         return rabbit.enviaryRecibirMensaje(solicitud);
     }
 
-    public JSONObject anadirUsuarioGrupo(String miUsuario, String nombreUsuario, String nombreGrupo) throws JSONException {
+    public JSONObject anadirUsuarioGrupo(String miUsuario, String nombreUsuario, String nombreGrupo) throws Throwable {
 
         JSONObject solicitud = new JSONObject();
         solicitud.put(NOMBRE_COMANDO, "ANADIR_USUARIO_GRUPO");
 
-        System.out.println("Añadir usario grupo");
-        System.out.println("nombre usuario es: "+ nombreUsuario);
-
         JSONObject parametros = new JSONObject();
         parametros.put("miusuario", miUsuario);
         parametros.put("nombreusuario", nombreUsuario);
@@ -111,14 +108,11 @@ public class ServicioGrupos implements UserDetailsService{
         return rabbit.enviaryRecibirMensaje(solicitud);
     }
 
-    public JSONObject eliminarUsuarioGrupo(String miUsuario, String nombreUsuario, String nombreGrupo) throws JSONException {
+    public JSONObject eliminarUsuarioGrupo(String miUsuario, String nombreUsuario, String nombreGrupo) throws Throwable {
 
         JSONObject solicitud = new JSONObject();
         solicitud.put(NOMBRE_COMANDO, "ELIMINAR_USUARIO_GRUPO");
 
-        System.out.println("ELIMINAR usario grupo");
-        System.out.println("nombre usuario es: "+ nombreUsuario);
-
         JSONObject parametros = new JSONObject();
         parametros.put("miusuario", miUsuario);
         parametros.put("nombreusuario", nombreUsuario);
@@ -127,7 +121,7 @@ public class ServicioGrupos implements UserDetailsService{
         return rabbit.enviaryRecibirMensaje(solicitud);
     }
 
-    public JSONObject obtenerMensajesGrupos( String destinatario) throws JSONException {
+    public JSONObject obtenerMensajesGrupos( String destinatario) throws Throwable {
         JSONObject solicitud = new JSONObject();
         solicitud.put(NOMBRE_COMANDO, "OBTENER_MENSAJES_GRUPOS");
 
