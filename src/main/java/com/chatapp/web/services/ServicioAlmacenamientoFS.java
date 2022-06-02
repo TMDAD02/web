@@ -1,73 +1,73 @@
 package com.chatapp.web.services;
 
 import com.chatapp.web.scheduled.Metricas;
+import io.minio.*;
+import io.minio.errors.MinioException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 @Service
 public class ServicioAlmacenamientoFS implements ServicioAlmacenamiento {
 
-	private final String LOCAL_PATH = "upload_dir";
-	private final Path rootLocation = Paths.get(LOCAL_PATH);
+	private final String bucket = "chatapp02-tmdad2022-";
+	private MinioClient minioClient;
 
 	@Autowired
 	private Metricas metricas;
 
 	@Override
-	public String store(MultipartFile file, String sender, String receiver) {
+	public String store(MultipartFile file, String sender) throws IOException, NoSuchAlgorithmException, InvalidKeyException{
 		try {
-			Path fileLocation = Paths.get(LOCAL_PATH, sender, receiver);
-			Files.createDirectories(fileLocation);
-
 			String generatedFilename = generateFilename(file.getOriginalFilename());
-			Path destinationFile = fileLocation.resolve(generatedFilename)
-					.normalize().toAbsolutePath();
 
-			if (file.isEmpty() || !destinationFile.getParent().equals(fileLocation.toAbsolutePath())) {
-				throw new IOException("Failed to store empty file.");
+			boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucket+sender).build());
+			if (!found) {
+				minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucket+sender).build());
+			} else {
+				System.out.println("Bucket "+ bucket + sender +" already exists.");
 			}
-			//metricas.incrementBytes(file.getBytes().length);
+
 			try (InputStream inputStream = file.getInputStream()) {
-				Files.copy(inputStream, destinationFile,
-					StandardCopyOption.REPLACE_EXISTING);
+				minioClient.putObject(
+						PutObjectArgs.builder()
+								.bucket(bucket+sender)
+								.object(generatedFilename)
+								.stream(inputStream, inputStream.available(), -1)
+								.build());
+				inputStream.close();
+
+				System.out.println(generatedFilename +" is uploaded successfully");
 				return generatedFilename;
 			}
-		} catch (IOException e) {
+			//metricas.incrementBytes(file.getBytes().length);
+
+		} catch (MinioException e) {
 			return null;
 		}
 	}
 
 
 	@Override
-	public Path load(String filename, String sender, String receiver) {
-		Path fileLocation = Paths.get(LOCAL_PATH, sender, receiver);
-		return fileLocation.resolve(filename);
-	}
-
-	@Override
-	public Resource loadAsResource(String filename, String sender, String receiver) {
+	public InputStream loadAsStream(String filename, String sender)
+			throws IOException, NoSuchAlgorithmException, InvalidKeyException{
 		try {
-			Path file = load(filename, sender, receiver);
-			Resource resource = new UrlResource(file.toUri());
-			if (resource.exists() || resource.isReadable()) {
-				return resource;
-			}
-			else {
-				System.out.println("Could not read file: " + filename);
-			}
+
+			InputStream stream =
+					minioClient.getObject(
+							GetObjectArgs.builder()
+									.bucket(bucket+sender)
+									.object(filename)
+									.build());
+
+			return stream;
 		}
-		catch (MalformedURLException e) {
+		catch (MinioException e) {
 			System.out.println("Could not read file: " + e);
 		}
 		return null;
@@ -76,12 +76,12 @@ public class ServicioAlmacenamientoFS implements ServicioAlmacenamiento {
 
 	@Override
 	public void init() {
-		try {
-			Files.createDirectories(rootLocation);
-		}
-		catch (IOException e) {
-			System.out.println("No se puede inicializar FS: " + e.getMessage());
-		}
+		minioClient =
+				MinioClient.builder()
+						.endpoint("https://play.min.io")
+						.credentials("Q3AM3UQ867SPQQA43P2F", "zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG")
+						.build();
+
 	}
 
 	private String generateFilename(String filename) {
