@@ -22,7 +22,6 @@ public class ServicioTrending {
 
     private Map<String, Integer> words = new HashMap<>();
     private String[] sustantivos;
-    private Map<String, Integer> trends;
 
     @Autowired
     Rabbit rabbit;
@@ -30,7 +29,7 @@ public class ServicioTrending {
     public void actualizarLista(String contenido) {
         StringTokenizer st = new StringTokenizer(contenido, " ");
         while (st.hasMoreTokens()) {
-            String token = st.nextToken();
+            String token = st.nextToken().toLowerCase();
             if (stringBinarySearch(sustantivos, token) >= 0) {
                 if (words.containsKey(token)) {
                     int count = words.get(token);
@@ -43,13 +42,13 @@ public class ServicioTrending {
 
         }
     }
-
+/*
     public Map<String, Integer> sorting() {
         trends = words.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
         return trends;
-    }
+    }*/
 
     public void iniciar() {
         List<String> list = new ArrayList<>(62500);
@@ -98,9 +97,8 @@ public class ServicioTrending {
     public void actualizarTrending() throws Throwable {
         JSONObject solicitud = new JSONObject();
         solicitud.put(NOMBRE_COMANDO, "ACTUALIZAR_TRENDING");
-        sorting();
         JSONObject parametros = new JSONObject();
-        parametros.put("listaTrending", mapToJson(trends));
+        parametros.put("listaTrending", mapToJson(words));
         solicitud.put(PARAMETROS, parametros);
         rabbit.enviaryRecibirMensaje(solicitud);
     }
